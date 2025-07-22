@@ -4,6 +4,7 @@ import { tasksAPI } from "@/lib/api";
 import { useToast } from "@/components/ui/use-toast";
 import { useAuth } from "./AuthContext";
 import { useDemoContext } from "./DemoContext";
+import { useTranslation } from "react-i18next";
 
 interface TaskContextType {
   tasks: Task[];
@@ -37,6 +38,7 @@ export const TaskProvider = ({ children }: TaskProviderProps) => {
   const [error, setError] = useState<string | null>(null);
   const { toast } = useToast();
   const { isAuthenticated } = useAuth();
+  const { t } = useTranslation();
   const { 
     isDemoMode, 
     demoTasks, 
@@ -67,8 +69,8 @@ export const TaskProvider = ({ children }: TaskProviderProps) => {
       console.error("Failed to fetch tasks:", err);
       setError(err.response?.data?.message || "Failed to load tasks. Please try again.");
       toast({
-        title: "Error",
-        description: "Failed to load tasks. Please try again.",
+        title: t('toast.error'),
+        description: t('toast.loadTasksError'),
         variant: "destructive",
       });
     } finally {
@@ -97,15 +99,15 @@ export const TaskProvider = ({ children }: TaskProviderProps) => {
       setTasks((prevTasks) => [...prevTasks, response.data]);
       
       toast({
-        title: "Task created",
-        description: "Your task has been successfully created.",
+        title: t('toast.createTaskSuccess'),
+        description: t('toast.createTaskMessage'),
       });
     } catch (err: any) {
       console.error("Failed to create task:", err);
       setError(err.response?.data?.message || "Failed to create task. Please try again.");
       toast({
-        title: "Error",
-        description: "Failed to create task. Please try again.",
+        title: t('toast.error'),
+        description: t('toast.createTaskError'),
         variant: "destructive",
       });
     } finally {
@@ -133,15 +135,15 @@ export const TaskProvider = ({ children }: TaskProviderProps) => {
       );
       
       toast({
-        title: "Task updated",
-        description: "Your task has been successfully updated.",
+        title: t('toast.updateTaskSuccess'),
+        description: t('toast.updateTaskMessage'),
       });
     } catch (err: any) {
       console.error("Failed to update task:", err);
       setError(err.response?.data?.message || "Failed to update task. Please try again.");
       toast({
-        title: "Error",
-        description: "Failed to update task. Please try again.",
+        title: t('toast.error'),
+        description: t('toast.updateTaskError'),
         variant: "destructive",
       });
     } finally {
@@ -167,15 +169,15 @@ export const TaskProvider = ({ children }: TaskProviderProps) => {
       setTasks((prevTasks) => prevTasks.filter((task) => task.id !== taskId));
       
       toast({
-        title: "Task deleted",
-        description: "The task has been successfully deleted.",
+        title: t('toast.deleteTaskSuccess'),
+        description: t('toast.deleteTaskMessage'),
       });
     } catch (err: any) {
       console.error("Failed to delete task:", err);
       setError(err.response?.data?.message || "Failed to delete task. Please try again.");
       toast({
-        title: "Error",
-        description: "Failed to delete task. Please try again.",
+        title: t('toast.error'),
+        description: t('toast.deleteTaskError'),
         variant: "destructive",
       });
     } finally {
@@ -220,15 +222,15 @@ export const TaskProvider = ({ children }: TaskProviderProps) => {
       );
       
       toast({
-        title: "Task updated",
-        description: "Task status has been updated.",
+        title: t('toast.updateStatusSuccess'),
+        description: t('toast.updateStatusMessage'),
       });
     } catch (err: any) {
       console.error("Failed to update task status:", err);
       setError(err.response?.data?.message || "Failed to update task status. Please try again.");
       toast({
-        title: "Error",
-        description: "Failed to update task status. Please try again.",
+        title: t('toast.error'),
+        description: t('toast.updateStatusError'),
         variant: "destructive",
       });
     } finally {

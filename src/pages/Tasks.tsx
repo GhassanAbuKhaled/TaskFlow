@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -17,6 +18,7 @@ import { Link, useNavigate } from "react-router-dom";
 
 const Tasks = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const { tasks, deleteTask, toggleTaskStatus, isLoading, error, fetchTasks } = useTaskContext();
   const { user } = useAuth();
@@ -75,14 +77,14 @@ const Tasks = () => {
   return (
     <div className="min-h-screen bg-background transition-colors duration-300 flex flex-col overflow-x-hidden">
       <Header 
-        userName={user?.username}
         onToggleSidebar={() => setSidebarOpen(!sidebarOpen)}
       />
       
       <div className="flex flex-1 relative h-[calc(100vh-56px)] sm:h-[calc(100vh-64px)] md:h-[calc(100vh-72px)]">
         <Sidebar 
           isOpen={sidebarOpen} 
-          onToggle={() => setSidebarOpen(!sidebarOpen)} 
+          onToggle={() => setSidebarOpen(!sidebarOpen)}
+          userName={user?.username}
         />
         
         <main className="flex-1 p-3 md:p-6 lg:p-8 overflow-y-auto overflow-x-hidden">
@@ -90,16 +92,16 @@ const Tasks = () => {
             {/* Header */}
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
               <div>
-                <h1 className="text-2xl sm:text-3xl font-bold text-foreground">My Tasks</h1>
+                <h1 className="text-2xl sm:text-3xl font-bold text-foreground">{t('tasks.title')}</h1>
                 <p className="text-muted-foreground mt-1">
-                  Manage and organize your tasks efficiently
+                  {t('tasks.manage')}
                 </p>
               </div>
               
               <Link to="/create-task">
                 <Button className="rounded-2xl shadow-medium hover:shadow-large transition-all duration-300">
                   <Plus className="h-4 w-4 mr-2" />
-                  New Task
+                  {t('dashboard.newTask')}
                 </Button>
               </Link>
             </div>
@@ -110,13 +112,13 @@ const Tasks = () => {
                 Total: {tasks.length}
               </Badge>
               <Badge variant="outline" className="px-3 py-2 rounded-full text-muted-foreground">
-                To Do: {getStatusCount("todo")}
+                {t('status.todo')}: {getStatusCount("todo")}
               </Badge>
               <Badge variant="outline" className="px-3 py-2 rounded-full text-warning">
-                In Progress: {getStatusCount("in-progress")}
+                {t('status.inProgress')}: {getStatusCount("in-progress")}
               </Badge>
               <Badge variant="outline" className="px-3 py-2 rounded-full text-success">
-                Completed: {getStatusCount("completed")}
+                {t('status.completed')}: {getStatusCount("completed")}
               </Badge>
             </div>
 
@@ -126,7 +128,7 @@ const Tasks = () => {
                 <div className="relative">
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                   <Input
-                    placeholder="Search tasks..."
+                    placeholder={t('tasks.search')}
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     className="pl-10 rounded-2xl border-border/50 focus:border-primary/50"
@@ -138,38 +140,38 @@ const Tasks = () => {
                 <Select value={statusFilter} onValueChange={setStatusFilter}>
                   <SelectTrigger className="w-full sm:w-[140px] rounded-2xl">
                     <Filter className="h-4 w-4 mr-2" />
-                    <SelectValue placeholder="Status" />
+                    <SelectValue placeholder={t('status.title')} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="all">All Status</SelectItem>
-                    <SelectItem value="todo">To Do</SelectItem>
-                    <SelectItem value="in-progress">In Progress</SelectItem>
-                    <SelectItem value="completed">Completed</SelectItem>
+                    <SelectItem value="all">{t('tasks.allStatus')}</SelectItem>
+                    <SelectItem value="todo">{t('status.todo')}</SelectItem>
+                    <SelectItem value="in-progress">{t('status.inProgress')}</SelectItem>
+                    <SelectItem value="completed">{t('status.completed')}</SelectItem>
                   </SelectContent>
                 </Select>
 
                 <Select value={priorityFilter} onValueChange={setPriorityFilter}>
                   <SelectTrigger className="w-full sm:w-[140px] rounded-2xl">
                     <Filter className="h-4 w-4 mr-2" />
-                    <SelectValue placeholder="Priority" />
+                    <SelectValue placeholder={t('taskForm.priority')} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="all">All Priority</SelectItem>
-                    <SelectItem value="high">High</SelectItem>
-                    <SelectItem value="medium">Medium</SelectItem>
-                    <SelectItem value="low">Low</SelectItem>
+                    <SelectItem value="all">{t('tasks.allPriority')}</SelectItem>
+                    <SelectItem value="high">{t('priority.high')}</SelectItem>
+                    <SelectItem value="medium">{t('priority.medium')}</SelectItem>
+                    <SelectItem value="low">{t('priority.low')}</SelectItem>
                   </SelectContent>
                 </Select>
 
                 <Select value={sortBy} onValueChange={setSortBy}>
                   <SelectTrigger className="w-full sm:w-[140px] rounded-2xl">
                     <SortAsc className="h-4 w-4 mr-2" />
-                    <SelectValue placeholder="Sort" />
+                    <SelectValue placeholder={t('tasks.sort')} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="dueDate">Due Date</SelectItem>
-                    <SelectItem value="priority">Priority</SelectItem>
-                    <SelectItem value="status">Status</SelectItem>
+                    <SelectItem value="dueDate">{t('taskForm.dueDate')}</SelectItem>
+                    <SelectItem value="priority">{t('taskForm.priority')}</SelectItem>
+                    <SelectItem value="status">{t('status.title')}</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -239,19 +241,19 @@ const Tasks = () => {
                   </div>
                   <h3 className="text-lg font-semibold text-foreground mb-2">
                     {searchTerm || statusFilter !== "all" || priorityFilter !== "all" 
-                      ? "No tasks found" 
-                      : "No tasks yet"
+                      ? t('tasks.noTasksFound') 
+                      : t('tasks.noTasks')
                     }
                   </h3>
                   <p className="text-muted-foreground mb-6">
                     {searchTerm || statusFilter !== "all" || priorityFilter !== "all"
-                      ? "Try adjusting your filters to see more tasks."
-                      : "Create your first task to get started with your productivity journey."
+                      ? t('tasks.adjustFilters')
+                      : t('tasks.createFirstTaskDescription')
                     }
                   </p>
                   <Link to="/create-task">
                     <Button className="rounded-2xl">
-                      Create Task
+                      {t('tasks.createTask')}
                     </Button>
                   </Link>
                 </div>

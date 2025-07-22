@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 export interface Task {
   id: string;
@@ -33,6 +34,7 @@ interface TaskCardProps {
 
 const TaskCard = ({ task, onEdit, onDelete, onToggleStatus }: TaskCardProps) => {
   const [showControls, setShowControls] = useState(false);
+  const { t } = useTranslation();
   
   const priorityColors = {
     low: "bg-success/10 text-success border-success/20",
@@ -87,7 +89,7 @@ const TaskCard = ({ task, onEdit, onDelete, onToggleStatus }: TaskCardProps) => 
                   variant="outline" 
                   className={cn("text-xs mt-1", priorityColors[task.priority])}
                 >
-                  {task.priority} priority
+                  {t(`taskCard.${task.priority}Priority`)}
                 </Badge>
               </div>
             </div>
@@ -147,12 +149,12 @@ const TaskCard = ({ task, onEdit, onDelete, onToggleStatus }: TaskCardProps) => 
                 </div>
               )}
               <Calendar className="h-3 w-3" />
-              <span className="truncate">Due {new Date(task.dueDate).toLocaleDateString()}</span>
+              <span className="truncate">{t('taskCard.due', { date: new Date(task.dueDate).toLocaleDateString() })}</span>
             </div>
           </div>
           
           <div className="text-xs">
-            Created {new Date(task.createdAt).toLocaleDateString()}
+            {t('taskCard.created', { date: new Date(task.createdAt).toLocaleDateString() })}
           </div>
         </div>
       </CardContent>

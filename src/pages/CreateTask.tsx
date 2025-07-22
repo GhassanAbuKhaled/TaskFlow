@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -18,6 +19,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 
 const CreateTask = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const { id } = useParams();
   const isEdit = Boolean(id);
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -115,14 +117,14 @@ const CreateTask = () => {
   return (
     <div className="min-h-screen bg-background transition-colors duration-300 flex flex-col overflow-x-hidden">
       <Header 
-        userName={user?.username}
         onToggleSidebar={() => setSidebarOpen(!sidebarOpen)}
       />
       
       <div className="flex flex-1 relative h-[calc(100vh-56px)] sm:h-[calc(100vh-64px)] md:h-[calc(100vh-72px)]">
         <Sidebar 
           isOpen={sidebarOpen} 
-          onToggle={() => setSidebarOpen(!sidebarOpen)} 
+          onToggle={() => setSidebarOpen(!sidebarOpen)}
+          userName={user?.username}
         />
         
         <main className="flex-1 p-3 md:p-6 lg:p-8 overflow-y-auto overflow-x-hidden">
@@ -130,17 +132,17 @@ const CreateTask = () => {
             {/* Header */}
             <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
               <Link to="/tasks">
-                <Button variant="ghost" size="sm" className="rounded-xl w-auto sm:w-[140px] h-9 font-medium mb-2 sm:mb-0">
+                <Button variant="ghost" size="sm" className="rounded-xl w-auto min-w-[140px] px-3 h-9 font-medium mb-2 sm:mb-0">
                   <ArrowLeft className="h-4 w-4 mr-2 flex-shrink-0" />
-                  <span className="whitespace-nowrap">Back to Tasks</span>
+                  <span className="whitespace-nowrap">{t('taskForm.backToTasks')}</span>
                 </Button>
               </Link>
               <div>
                 <h1 className="text-2xl sm:text-3xl font-bold text-foreground">
-                  {isEdit ? "Edit Task" : "Create New Task"}
+                  {isEdit ? t('taskForm.editTitle') : t('taskForm.createTitle')}
                 </h1>
                 <p className="text-muted-foreground mt-1">
-                  {isEdit ? "Update your task details" : "Add a new task to your list"}
+                  {isEdit ? t('taskForm.editSubtitle') : t('taskForm.createSubtitle')}
                 </p>
               </div>
             </div>
@@ -149,7 +151,7 @@ const CreateTask = () => {
             <Card className="rounded-2xl border-border/50 shadow-soft">
               <CardHeader className="p-3 sm:p-6">
                 <CardTitle className="text-lg sm:text-xl font-semibold">
-                  Task Details
+                  {t('taskForm.taskDetails')}
                 </CardTitle>
               </CardHeader>
               
@@ -163,13 +165,13 @@ const CreateTask = () => {
                 <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
                   {/* Title */}
                   <div className="space-y-2">
-                    <Label htmlFor="title" className="text-sm font-medium">
-                      Task Title *
+                    <Label htmlFor="title" className="text-sm font-medium break-words hyphens-auto">
+                      {t('taskForm.title')} *
                     </Label>
                     <Input
                       id="title"
                       type="text"
-                      placeholder="Enter task title"
+                      placeholder={t('taskForm.enterTitle')}
                       value={formData.title}
                       onChange={(e) => handleInputChange("title", e.target.value)}
                       className="rounded-2xl border-border/50 focus:border-primary/50"
@@ -179,12 +181,12 @@ const CreateTask = () => {
 
                   {/* Description */}
                   <div className="space-y-2">
-                    <Label htmlFor="description" className="text-sm font-medium">
-                      Description
+                    <Label htmlFor="description" className="text-sm font-medium break-words hyphens-auto">
+                      {t('taskForm.description')}
                     </Label>
                     <Textarea
                       id="description"
-                      placeholder="Describe your task in detail"
+                      placeholder={t('taskForm.descriptionPlaceholder')}
                       value={formData.description}
                       onChange={(e) => handleInputChange("description", e.target.value)}
                       className="rounded-2xl border-border/50 focus:border-primary/50 min-h-[100px]"
@@ -195,35 +197,35 @@ const CreateTask = () => {
                   {/* Status and Priority */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label className="text-sm font-medium">Status</Label>
+                      <Label className="text-sm font-medium break-words hyphens-auto">{t('taskForm.status')}</Label>
                       <Select 
                         value={formData.status} 
                         onValueChange={(value) => handleInputChange("status", value)}
                       >
                         <SelectTrigger className="rounded-2xl border-border/50">
-                          <SelectValue placeholder="Select status" />
+                          <SelectValue placeholder={t('taskForm.selectStatus')} />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="todo">To Do</SelectItem>
-                          <SelectItem value="in-progress">In Progress</SelectItem>
-                          <SelectItem value="completed">Completed</SelectItem>
+                          <SelectItem value="todo">{t('status.todo')}</SelectItem>
+                          <SelectItem value="in-progress">{t('status.inProgress')}</SelectItem>
+                          <SelectItem value="completed">{t('status.completed')}</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
 
                     <div className="space-y-2">
-                      <Label className="text-sm font-medium">Priority</Label>
+                      <Label className="text-sm font-medium break-words hyphens-auto">{t('taskForm.priority')}</Label>
                       <Select 
                         value={formData.priority} 
                         onValueChange={(value) => handleInputChange("priority", value)}
                       >
                         <SelectTrigger className="rounded-2xl border-border/50">
-                          <SelectValue placeholder="Select priority" />
+                          <SelectValue placeholder={t('taskForm.selectPriority')} />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="low">Low</SelectItem>
-                          <SelectItem value="medium">Medium</SelectItem>
-                          <SelectItem value="high">High</SelectItem>
+                          <SelectItem value="low">{t('priority.low')}</SelectItem>
+                          <SelectItem value="medium">{t('priority.medium')}</SelectItem>
+                          <SelectItem value="high">{t('priority.high')}</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
@@ -231,29 +233,29 @@ const CreateTask = () => {
 
                   {/* Due Date */}
                   <div className="space-y-2">
-                    <Label htmlFor="dueDate" className="text-sm font-medium">
-                      Due Date *
+                    <Label htmlFor="dueDate" className="text-sm font-medium break-words hyphens-auto">
+                      {t('taskForm.dueDate')} *
                     </Label>
                     <DateInput
                       id="dueDate"
                       value={formData.dueDate}
                       onChange={(value) => handleInputChange("dueDate", value)}
                       required
-                      placeholder="Select due date..."
+                      placeholder={t('taskForm.selectDate')}
                     />
                   </div>
 
                   {/* Tags */}
                   <div className="space-y-2">
-                    <Label htmlFor="tags" className="text-sm font-medium">
-                      Tags
+                    <Label htmlFor="tags" className="text-sm font-medium break-words hyphens-auto">
+                      {t('taskForm.tags')}
                     </Label>
                     <div className="space-y-3">
                       <div className="flex flex-col sm:flex-row gap-2">
                         <Input
                           id="tags"
                           type="text"
-                          placeholder="Add a tag and press Enter"
+                          placeholder={t('taskForm.addTagPlaceholder')}
                           value={newTag}
                           onChange={(e) => setNewTag(e.target.value)}
                           onKeyPress={handleKeyPress}
@@ -262,10 +264,10 @@ const CreateTask = () => {
                         <Button
                           type="button"
                           onClick={addTag}
-                          variant="outline"
-                          className="rounded-2xl w-full sm:w-[80px] h-10 font-medium"
+                          variant="default"
+                          className="rounded-2xl w-full sm:w-auto sm:min-w-[120px] sm:px-4 h-10 font-medium"
                         >
-                          <span className="whitespace-nowrap">Add</span>
+                          <span className="whitespace-nowrap">{t('taskForm.addTag')}</span>
                         </Button>
                       </div>
                       
@@ -296,14 +298,14 @@ const CreateTask = () => {
                   <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-4 sm:pt-6 border-t border-border/50">
                     <Button
                       type="submit"
-                      className="flex-1 rounded-2xl h-10 sm:h-12 text-sm sm:text-base font-medium shadow-medium hover:shadow-large transition-all duration-300"
+                      className="flex-1 rounded-2xl h-10 sm:h-12 text-sm sm:text-base font-medium shadow-medium hover:shadow-large transition-all duration-300 px-3"
                       disabled={isLoading}
                     >
                       <Save className="h-4 w-4 mr-2 flex-shrink-0" />
                       <span className="whitespace-nowrap">
                         {isLoading 
-                          ? (isEdit ? "Updating..." : "Creating...") 
-                          : (isEdit ? "Update Task" : "Create Task")
+                          ? (isEdit ? t('taskForm.updating') : t('taskForm.creating')) 
+                          : (isEdit ? t('taskForm.updateButton') : t('taskForm.createButton'))
                         }
                       </span>
                     </Button>
@@ -312,9 +314,9 @@ const CreateTask = () => {
                       <Button
                         type="button"
                         variant="outline"
-                        className="w-full rounded-2xl h-10 sm:h-12 text-sm sm:text-base font-medium"
+                        className="w-full rounded-2xl h-10 sm:h-12 text-sm sm:text-base font-medium px-3"
                       >
-                        <span className="whitespace-nowrap">Cancel</span>
+                        <span className="whitespace-nowrap">{t('taskForm.cancel')}</span>
                       </Button>
                     </Link>
                   </div>

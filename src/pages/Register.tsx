@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -9,6 +10,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 
 const Register = () => {
+  const { t } = useTranslation();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -24,7 +26,7 @@ const Register = () => {
     setError("");
     
     if (formData.password !== formData.confirmPassword) {
-      setError("Passwords do not match. Please try again.");
+      setError(t('register.passwordMismatch'));
       return;
     }
 
@@ -34,7 +36,7 @@ const Register = () => {
         navigate("/login");
       }
     } catch (err) {
-      setError("An unexpected error occurred. Please try again.");
+      setError(t('register.errorMessage'));
     }
   };
 
@@ -49,7 +51,7 @@ const Register = () => {
         <div className="mb-8">
           <Link to="/" className="inline-flex items-center text-muted-foreground hover:text-foreground transition-colors font-medium">
             <ArrowLeft className="h-4 w-4 mr-2 flex-shrink-0" />
-            <span className="whitespace-nowrap">Back to Home</span>
+            <span className="whitespace-nowrap">{t('register.backToHome')}</span>
           </Link>
         </div>
 
@@ -57,9 +59,9 @@ const Register = () => {
         <Card className="border-0 shadow-large rounded-3xl bg-card/80 backdrop-blur-sm">
           <CardHeader className="text-center pb-2">
             <div className="text-3xl font-bold text-primary mb-2">TaskFlow</div>
-            <CardTitle className="text-2xl font-semibold">Create account</CardTitle>
+            <CardTitle className="text-2xl font-semibold">{t('register.createAccount')}</CardTitle>
             <CardDescription className="text-base">
-              Start your journey to better productivity
+              {t('register.subtitle')}
             </CardDescription>
           </CardHeader>
           
@@ -72,13 +74,13 @@ const Register = () => {
             )}
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="space-y-2">
-                <Label htmlFor="name" className="text-sm font-medium">Full Name</Label>
+                <Label htmlFor="name" className="text-sm font-medium">{t('register.fullName')}</Label>
                 <div className="relative">
                   <User className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                   <Input
                     id="name"
                     type="text"
-                    placeholder="Enter your full name"
+                    placeholder={t('register.fullNamePlaceholder')}
                     value={formData.name}
                     onChange={(e) => handleInputChange("name", e.target.value)}
                     className="pl-10 rounded-2xl border-border/50 focus:border-primary/50 h-12"
@@ -88,13 +90,13 @@ const Register = () => {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="email" className="text-sm font-medium">Email</Label>
+                <Label htmlFor="email" className="text-sm font-medium">{t('register.email')}</Label>
                 <div className="relative">
                   <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                   <Input
                     id="email"
                     type="email"
-                    placeholder="Enter your email"
+                    placeholder={t('register.emailPlaceholder')}
                     value={formData.email}
                     onChange={(e) => handleInputChange("email", e.target.value)}
                     className="pl-10 rounded-2xl border-border/50 focus:border-primary/50 h-12"
@@ -104,13 +106,13 @@ const Register = () => {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="password" className="text-sm font-medium">Password</Label>
+                <Label htmlFor="password" className="text-sm font-medium">{t('register.password')}</Label>
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                   <Input
                     id="password"
                     type="password"
-                    placeholder="Create a password"
+                    placeholder={t('register.passwordPlaceholder')}
                     value={formData.password}
                     onChange={(e) => handleInputChange("password", e.target.value)}
                     className="pl-10 rounded-2xl border-border/50 focus:border-primary/50 h-12"
@@ -120,13 +122,13 @@ const Register = () => {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="confirmPassword" className="text-sm font-medium">Confirm Password</Label>
+                <Label htmlFor="confirmPassword" className="text-sm font-medium">{t('register.confirmPassword')}</Label>
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                   <Input
                     id="confirmPassword"
                     type="password"
-                    placeholder="Confirm your password"
+                    placeholder={t('register.confirmPasswordPlaceholder')}
                     value={formData.confirmPassword}
                     onChange={(e) => handleInputChange("confirmPassword", e.target.value)}
                     className="pl-10 rounded-2xl border-border/50 focus:border-primary/50 h-12"
@@ -136,10 +138,10 @@ const Register = () => {
               </div>
 
               <div className="text-xs text-muted-foreground">
-                By creating an account, you agree to our{" "}
-                <a href="#" className="text-primary hover:underline">Terms of Service</a>
-                {" "}and{" "}
-                <a href="#" className="text-primary hover:underline">Privacy Policy</a>.
+                {t('register.termsAgreement')}{" "}
+                <a href="#" className="text-primary hover:underline">{t('register.termsOfService')}</a>
+                {" "}{t('register.and')}{" "}
+                <a href="#" className="text-primary hover:underline">{t('register.privacyPolicy')}</a>.
               </div>
 
               <Button
@@ -147,14 +149,14 @@ const Register = () => {
                 className="w-full rounded-2xl h-12 text-base font-medium shadow-medium hover:shadow-large transition-all duration-300"
                 disabled={isLoading}
               >
-                <span className="whitespace-nowrap">{isLoading ? "Creating account..." : "Create Account"}</span>
+                <span className="whitespace-nowrap">{isLoading ? t('register.creatingAccount') : t('register.createAccountButton')}</span>
               </Button>
             </form>
 
             <div className="mt-6 text-center text-sm text-muted-foreground">
-              Already have an account?{" "}
+              {t('register.alreadyHaveAccount')}{" "}
               <Link to="/login" className="text-primary hover:underline font-medium">
-                Sign in
+                {t('register.signIn')}
               </Link>
             </div>
           </CardContent>

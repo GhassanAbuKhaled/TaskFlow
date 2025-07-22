@@ -1,7 +1,8 @@
-import { createContext, useContext, useState, ReactNode } from 'react';
+import { createContext, useContext, useState, ReactNode, useMemo } from 'react';
 import { Task } from '@/components/TaskCard';
 import { v4 as uuidv4 } from 'uuid';
 import { useToast } from '@/components/ui/use-toast';
+import { useTranslation } from 'react-i18next';
 
 // Default demo tasks
 const defaultDemoTasks: Task[] = [
@@ -73,6 +74,7 @@ export const DemoProvider = ({ children }: { children: ReactNode }) => {
   const [isDemoMode, setIsDemoMode] = useState(false);
   const [demoTasks, setDemoTasks] = useState<Task[]>(defaultDemoTasks);
   const { toast } = useToast();
+  const { t } = useTranslation();
 
   const addDemoTask = (taskData: Omit<Task, "id" | "createdAt">) => {
     const newTask: Task = {
@@ -83,8 +85,8 @@ export const DemoProvider = ({ children }: { children: ReactNode }) => {
     
     setDemoTasks(prev => [...prev, newTask]);
     toast({
-      title: "Demo Mode",
-      description: "Task created in demo mode. Create an account to save your data!",
+      title: t('toast.demoMode'),
+      description: t('toast.demoTaskCreated'),
     });
   };
 
@@ -93,52 +95,46 @@ export const DemoProvider = ({ children }: { children: ReactNode }) => {
       prev.map(task => task.id === updatedTask.id ? updatedTask : task)
     );
     toast({
-      title: "Demo Mode",
-      description: "Task updated in demo mode. Changes won't persist after you leave.",
+      title: t('toast.demoMode'),
+      description: t('toast.demoTaskUpdated'),
     });
   };
 
   const deleteDemoTask = (taskId: string) => {
     setDemoTasks(prev => prev.filter(task => task.id !== taskId));
     toast({
-      title: "Demo Mode",
-      description: "Task deleted in demo mode.",
+      title: t('toast.demoMode'),
+      description: t('toast.demoTaskDeleted'),
     });
   };
 
   const toggleDemoTaskStatus = (taskId: string) => {
-    setDemoTasks(prev =>
-      prev.map(task => {
-        if (task.id === taskId) {
-          const nextStatus =
-            task.status === "todo"
-              ? "in-progress"
-              : task.status === "in-progress"
-              ? "completed"
-              : "todo";
-          return { ...task, status: nextStatus };
-        }
-        return task;
-      })
-    );
+    const statusMap: Record<string, Task['status']> = { "todo": "in-progress", "in-progress": "completed", "completed": "todo" };
+    
+    setDemoTasks(prev => prev.map(task => 
+      task.id === taskId 
+        ? { ...task, status: statusMap[task.status] } 
+        : task
+    ));
+    
     toast({
-      title: "Demo Mode",
-      description: "Task status updated in demo mode.",
+      title: t('toast.demoMode'),
+      description: t('toast.demoTaskStatusUpdated'),
     });
   };
 
+  const contextValue = useMemo(() => ({
+    isDemoMode,
+    setDemoMode: setIsDemoMode,
+    demoTasks,
+    addDemoTask,
+    updateDemoTask,
+    deleteDemoTask,
+    toggleDemoTaskStatus,
+  }), [isDemoMode, demoTasks]);
+
   return (
-    <DemoContext.Provider
-      value={{
-        isDemoMode,
-        setDemoMode: setIsDemoMode,
-        demoTasks,
-        addDemoTask,
-        updateDemoTask,
-        deleteDemoTask,
-        toggleDemoTaskStatus,
-      }}
-    >
+    <DemoContext.Provider value={contextValue}>
       {children}
     </DemoContext.Provider>
   );
@@ -146,8 +142,9 @@ export const DemoProvider = ({ children }: { children: ReactNode }) => {
 
 export const useDemoContext = () => {
   const context = useContext(DemoContext);
+  const { t } = useTranslation();
   if (context === undefined) {
-    throw new Error('useDemoContext must be used within a DemoProvider');
+    throw new Error(t('toast.demoProviderError'));
   }
   return context;
 };

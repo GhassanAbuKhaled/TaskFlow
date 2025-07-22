@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { 
   LayoutDashboard, 
@@ -7,19 +8,33 @@ import {
   Calendar,
   Settings,
   Archive,
-  X
+  X,
+  User,
+  LogOut
 } from "lucide-react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
 import { cn } from "@/lib/utils";
 
 interface SidebarProps {
   isOpen: boolean;
   onToggle: () => void;
+  userName?: string;
 }
 
-const Sidebar = ({ isOpen, onToggle }: SidebarProps) => {
+const Sidebar = ({ isOpen, onToggle, userName }: SidebarProps) => {
   const location = useLocation();
+  const navigate = useNavigate();
+  const { t } = useTranslation();
+  const { user, logout } = useAuth();
   const [isCollapsed, setIsCollapsed] = useState(false);
+  
+  const displayName = userName || (user ? user.username : "User");
+  
+  const handleLogout = () => {
+    logout();
+    navigate("/login");
+  };
 
   // Handle responsive behavior
   useEffect(() => {
@@ -38,32 +53,32 @@ const Sidebar = ({ isOpen, onToggle }: SidebarProps) => {
 
   const navigation = [
     {
-      name: "Dashboard",
+      name: t('navbar.dashboard'),
       href: "/dashboard",
       icon: LayoutDashboard,
     },
     {
-      name: "My Tasks",
+      name: t('navbar.tasks'),
       href: "/tasks",
       icon: CheckSquare,
     },
     {
-      name: "Create Task",
+      name: t('navbar.createTask'),
       href: "/create-task",
       icon: Plus,
     },
     // {
-    //   name: "Calendar",
+    //   name: t('navbar.calendar'),
     //   href: "/calendar",
     //   icon: Calendar,
     // },
     // {
-    //   name: "Archive",
+    //   name: t('navbar.archive'),
     //   href: "/archive",
     //   icon: Archive,
     // },
     // {
-    //   name: "Settings",
+    //   name: t('navbar.settings'),
     //   href: "/settings",
     //   icon: Settings,
     // },
@@ -104,7 +119,7 @@ const Sidebar = ({ isOpen, onToggle }: SidebarProps) => {
           <div className="flex items-center justify-between p-3 md:p-4 border-b border-sidebar-border">
             {!isCollapsed && (
               <h1 className="text-base md:text-lg font-semibold text-sidebar-foreground">
-                Menu
+                {t('navbar.menu')}
               </h1>
             )}
             <div className="flex items-center space-x-2">
@@ -167,6 +182,45 @@ const Sidebar = ({ isOpen, onToggle }: SidebarProps) => {
 
           {/* Spacer to push content to the top */}
           <div className="flex-grow"></div>
+          
+          {/* User Profile Section */}
+          <div className="p-3 md:p-4 border-t border-sidebar-border">
+            {!isCollapsed ? (
+              <div className="flex flex-col space-y-3">
+                <div className="flex items-center space-x-3">
+                  <div className="w-10 h-10 bg-sidebar-primary/20 rounded-full flex items-center justify-center flex-shrink-0">
+                    <User className="h-5 w-5 text-sidebar-primary" />
+                  </div>
+                  <span className="text-sm font-medium text-sidebar-foreground truncate max-w-[150px]" title={displayName}>
+                    {displayName}
+                  </span>
+                </div>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={handleLogout}
+                  className="w-full justify-start rounded-xl text-sidebar-foreground hover:text-destructive hover:bg-destructive/10 transition-smooth"
+                >
+                  <LogOut className="h-4 w-4 mr-3" />
+                  <span className="font-medium text-sm">{t('navbar.logout')}</span>
+                </Button>
+              </div>
+            ) : (
+              <div className="flex flex-col items-center space-y-3">
+                <div className="w-10 h-10 bg-sidebar-primary/20 rounded-full flex items-center justify-center">
+                  <User className="h-5 w-5 text-sidebar-primary" />
+                </div>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={handleLogout}
+                  className="rounded-xl text-sidebar-foreground hover:text-destructive hover:bg-destructive/10 transition-smooth p-2"
+                >
+                  <LogOut className="h-4 w-4" />
+                </Button>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </>

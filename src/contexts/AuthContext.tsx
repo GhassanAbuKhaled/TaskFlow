@@ -1,6 +1,7 @@
 import { createContext, useContext, useState, useEffect, ReactNode, useMemo } from 'react';
 import { authAPI } from '@/lib/api';
 import { useToast } from '@/components/ui/use-toast';
+import { useTranslation } from 'react-i18next';
 
 interface User {
   id: string;
@@ -23,6 +24,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const { toast } = useToast();
+  const { t } = useTranslation();
 
   useEffect(() => {
     // Check if user is already logged in
@@ -33,7 +35,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       try {
         setUser(JSON.parse(storedUser));
       } catch (error) {
-        console.error('Failed to parse stored user data');
+        console.error(t('toast.parseUserDataError'));
         localStorage.removeItem('user');
         localStorage.removeItem('token');
       }
@@ -53,16 +55,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setUser(user);
       
       toast({
-        title: "Login successful",
-        description: `Welcome back, ${user.username}!`,
+        title: t('toast.loginSuccess'),
+        description: t('toast.loginWelcome', { username: user.username }),
       });
       
       return true;
     } catch (error: any) {
-      const message = error.response?.data?.message || 'Login failed. Please check your credentials.';
+      const message = error.response?.data?.message || t('toast.loginErrorMessage');
       toast({
-        title: "Login failed",
-        description: message,
+        title: t('toast.loginError'),
+        description: message || t('toast.loginErrorMessage'),
         variant: "destructive",
       });
       return false;
@@ -78,16 +80,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       const { message } = response.data;
       
       toast({
-        title: "Registration successful",
-        description: message || "Your account has been created. Please log in.",
+        title: t('toast.registerSuccess'),
+        description: message || t('toast.registerMessage'),
       });
       
       return true;
     } catch (error: any) {
-      const message = error.response?.data?.message || 'Registration failed. Please try again.';
+      const message = error.response?.data?.message || t('toast.registerErrorMessage');
       toast({
-        title: "Registration failed",
-        description: message,
+        title: t('toast.registerError'),
+        description: message || t('toast.registerErrorMessage'),
         variant: "destructive",
       });
       return false;
@@ -100,8 +102,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     authAPI.logout();
     setUser(null);
     toast({
-      title: "Logged out",
-      description: "You have been successfully logged out.",
+      title: t('toast.logoutSuccess'),
+      description: t('toast.logoutMessage'),
     });
   };
 
@@ -123,8 +125,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
+  const { t } = useTranslation();
   if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
+    throw new Error(t('toast.authProviderError'));
   }
   return context;
 };

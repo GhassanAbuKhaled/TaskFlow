@@ -1,10 +1,12 @@
 import { motion, LazyMotion, domAnimation } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, CheckCircle, Calendar, Users } from "lucide-react";
+import { ArrowRight, CheckCircle, Calendar, Tag } from "lucide-react";
 import { Link } from "react-router-dom";
 import ThemeToggle from "@/components/ThemeToggle";
+import LanguageSwitcher from "@/components/LanguageSwitcher";
 import heroImage from "@/assets/hero-image.jpg";
 import { useMemo } from "react";
+import { useTranslation } from "react-i18next";
 
 // Animation variants with smoother transitions
 const fadeInUp = {
@@ -31,24 +33,25 @@ const textTransition = {
 
 // Optimized Welcome component
 const Welcome = () => {
+  const { t } = useTranslation();
   // Memoize features to prevent unnecessary re-renders
   const features = useMemo(() => [
     {
       icon: CheckCircle,
-      title: "Task Management",
-      description: "Organize your tasks with ease and track your progress"
+      title: t('welcome.features.taskManagement.title'),
+      description: t('welcome.features.taskManagement.description')
     },
     {
       icon: Calendar,
-      title: "Deadline Tracking",
-      description: "Never miss a deadline with our smart reminder system"
+      title: t('welcome.features.deadlineTracking.title'),
+      description: t('welcome.features.deadlineTracking.description')
     },
     {
-      icon: Users,
-      title: "Team Collaboration",
-      description: "Work together seamlessly with your team members"
+      icon: Tag,
+      title: t('welcome.features.smartTags.title'),
+      description: t('welcome.features.smartTags.description')
     }
-  ], []);
+  ], [t]);
 
   // Memoize feature cards for better performance
   const featureCards = useMemo(() => {
@@ -93,14 +96,10 @@ const Welcome = () => {
           <div className="text-xl md:text-2xl font-bold text-primary">TaskFlow</div>
           <div className="flex items-center gap-1 xs:gap-2 md:gap-4">
             <ThemeToggle />
+            <LanguageSwitcher />
             <Link to="/login">
               <Button variant="ghost" className="font-medium text-xs sm:text-sm md:text-base w-[70px] sm:w-[100px] h-8 sm:h-10">
-                <span className="whitespace-nowrap">Sign In</span>
-              </Button>
-            </Link>
-            <Link to="/register">
-              <Button className="rounded-2xl font-medium text-xs sm:text-sm md:text-base w-[90px] sm:w-[120px] h-8 sm:h-10">
-                <span className="whitespace-nowrap">Get Started</span>
+                <span className="whitespace-nowrap">{t('navbar.login')}</span>
               </Button>
             </Link>
           </div>
@@ -126,8 +125,8 @@ const Welcome = () => {
                     animate="visible"
                     transition={{ type: "tween", ease: "easeOut", duration: 0.4, delay: 0.1 }}
                   >
-                    Beautiful Task
-                    <span className="block text-primary dark:text-primary">Management</span>
+                    {t('welcome.title')}
+                    <span className="block text-primary dark:text-primary">{t('welcome.subtitle')}</span>
                   </motion.h1>
                   <motion.p 
                     className="text-base sm:text-lg md:text-xl text-muted-foreground leading-relaxed will-change-transform"
@@ -136,8 +135,7 @@ const Welcome = () => {
                     animate="visible"
                     transition={{ type: "tween", ease: "easeOut", duration: 0.4, delay: 0.2 }}
                   >
-                    Organize your life with elegance. A delightful task management
-                    experience that makes productivity feel effortless.
+                    {t('welcome.description')}
                   </motion.p>
                 </div>
                 
@@ -154,7 +152,7 @@ const Welcome = () => {
                   >
                     <Link to="/register">
                       <Button size="lg" className="w-full sm:w-[200px] h-[50px] sm:h-[60px] rounded-2xl text-base sm:text-lg font-medium shadow-medium hover:shadow-large transition-colors large-button-stable">
-                        <span className="whitespace-nowrap">Get Started</span>
+                        <span className="whitespace-nowrap">{t('welcome.getStarted')}</span>
                         <ArrowRight className="ml-2 h-5 w-5 flex-shrink-0" />
                       </Button>
                     </Link>
@@ -165,7 +163,7 @@ const Welcome = () => {
                   >
                     <Link to="/demo">
                       <Button variant="outline" size="lg" className="w-full sm:w-[160px] h-[50px] sm:h-[60px] rounded-2xl text-base sm:text-lg font-medium bg-background/50 backdrop-blur-sm hover:bg-background/70 transition-colors large-button-stable">
-                        <span className="whitespace-nowrap">View Demo</span>
+                        <span className="whitespace-nowrap">{t('welcome.viewDemo')}</span>
                       </Button>
                     </Link>
                   </motion.div>
@@ -198,11 +196,10 @@ const Welcome = () => {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 pb-12 sm:pb-16 md:pb-24">
             <div className="text-center mb-8 sm:mb-12 md:mb-16">
               <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground mb-3 sm:mb-4">
-                Everything you need to stay organized
+                {t('welcome.features.title')}
               </h2>
               <p className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto">
-                Designed with love and attention to detail, TaskFlow brings you
-                the perfect balance of functionality and beauty.
+                {t('welcome.features.subtitle')}
               </p>
             </div>
 
