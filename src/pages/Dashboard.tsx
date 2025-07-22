@@ -200,10 +200,10 @@ const Dashboard = () => {
                           <span className="whitespace-nowrap">View All Tasks</span>
                         </Button>
                       </Link>
-                      <Button variant="outline" className="rounded-2xl w-[160px] h-10 font-medium">
+                      {/* <Button variant="outline" className="rounded-2xl w-[160px] h-10 font-medium">
                         <Calendar className="h-4 w-4 mr-2 flex-shrink-0" />
                         <span className="whitespace-nowrap">Calendar View</span>
-                      </Button>
+                      </Button> */}
                     </div>
                   </CardContent>
                 </Card>
