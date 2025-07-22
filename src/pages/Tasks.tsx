@@ -1,0 +1,267 @@
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Badge } from "@/components/ui/badge";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import Header from "@/components/Header";
+import Sidebar from "@/components/Sidebar";
+import TaskCard, { Task } from "@/components/TaskCard";
+import { useTaskContext } from "@/contexts/TaskContext";
+import { useAuth } from "@/contexts/AuthContext";
+import { useDemoContext } from "@/contexts/DemoContext";
+import { Plus, Search, Filter, SortAsc, AlertCircle, Loader2 } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+
+const Tasks = () => {
+  const navigate = useNavigate();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const { tasks, deleteTask, toggleTaskStatus, isLoading, error, fetchTasks } = useTaskContext();
+  const { user } = useAuth();
+  const { isDemoMode } = useDemoContext();
+  
+  const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [priorityFilter, setPriorityFilter] = useState<string>("all");
+  const [sortBy, setSortBy] = useState<string>("dueDate");
+  
+  // Fetch tasks when component mounts
+  useEffect(() => {
+    fetchTasks();
+  }, [fetchTasks]);
+
+  // Filter and sort tasks
+  const filteredTasks = tasks
+    .filter(task => {
+      const matchesSearch = task.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                           task.description.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesStatus = statusFilter === "all" || task.status === statusFilter;
+      const matchesPriority = priorityFilter === "all" || task.priority === priorityFilter;
+      
+      return matchesSearch && matchesStatus && matchesPriority;
+    })
+    .sort((a, b) => {
+      switch (sortBy) {
+        case "dueDate":
+          return new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime();
+        case "priority":
+          const priorityOrder = { high: 3, medium: 2, low: 1 };
+          return priorityOrder[b.priority] - priorityOrder[a.priority];
+        case "status":
+          return a.status.localeCompare(b.status);
+        default:
+          return 0;
+      }
+    });
+
+  const handleEditTask = (task: Task) => {
+    navigate(`/edit-task/${task.id}`);
+  };
+
+  const handleDeleteTask = async (taskId: string) => {
+    await deleteTask(taskId);
+  };
+
+  const handleToggleStatus = async (taskId: string) => {
+    await toggleTaskStatus(taskId);
+  };
+
+  const getStatusCount = (status: string) => {
+    return tasks.filter(task => task.status === status).length;
+  };
+
+  return (
+    <div className="min-h-screen bg-background transition-colors duration-300 flex flex-col overflow-x-hidden">
+      <Header 
+        userName={user?.username}
+        onToggleSidebar={() => setSidebarOpen(!sidebarOpen)}
+      />
+      
+      <div className="flex flex-1 relative h-[calc(100vh-56px)] sm:h-[calc(100vh-64px)] md:h-[calc(100vh-72px)]">
+        <Sidebar 
+          isOpen={sidebarOpen} 
+          onToggle={() => setSidebarOpen(!sidebarOpen)} 
+        />
+        
+        <main className="flex-1 p-3 md:p-6 lg:p-8 overflow-y-auto overflow-x-hidden">
+          <div className="max-w-7xl mx-auto space-y-6 md:space-y-8">
+            {/* Header */}
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+              <div>
+                <h1 className="text-2xl sm:text-3xl font-bold text-foreground">My Tasks</h1>
+                <p className="text-muted-foreground mt-1">
+                  Manage and organize your tasks efficiently
+                </p>
+              </div>
+              
+              <Link to="/create-task">
+                <Button className="rounded-2xl shadow-medium hover:shadow-large transition-all duration-300">
+                  <Plus className="h-4 w-4 mr-2" />
+                  New Task
+                </Button>
+              </Link>
+            </div>
+
+            {/* Status Overview */}
+            <div className="flex flex-wrap gap-2 sm:gap-4">
+              <Badge variant="outline" className="px-3 py-2 rounded-full">
+                Total: {tasks.length}
+              </Badge>
+              <Badge variant="outline" className="px-3 py-2 rounded-full text-muted-foreground">
+                To Do: {getStatusCount("todo")}
+              </Badge>
+              <Badge variant="outline" className="px-3 py-2 rounded-full text-warning">
+                In Progress: {getStatusCount("in-progress")}
+              </Badge>
+              <Badge variant="outline" className="px-3 py-2 rounded-full text-success">
+                Completed: {getStatusCount("completed")}
+              </Badge>
+            </div>
+
+            {/* Filters */}
+            <div className="flex flex-col lg:flex-row gap-3 sm:gap-4 p-3 sm:p-6 bg-card rounded-2xl border border-border/50 shadow-soft">
+              <div className="flex-1">
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    placeholder="Search tasks..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="pl-10 rounded-2xl border-border/50 focus:border-primary/50"
+                  />
+                </div>
+              </div>
+              
+              <div className="flex flex-wrap gap-2 sm:gap-4 md:flex-row">
+                <Select value={statusFilter} onValueChange={setStatusFilter}>
+                  <SelectTrigger className="w-full sm:w-[140px] rounded-2xl">
+                    <Filter className="h-4 w-4 mr-2" />
+                    <SelectValue placeholder="Status" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Status</SelectItem>
+                    <SelectItem value="todo">To Do</SelectItem>
+                    <SelectItem value="in-progress">In Progress</SelectItem>
+                    <SelectItem value="completed">Completed</SelectItem>
+                  </SelectContent>
+                </Select>
+
+                <Select value={priorityFilter} onValueChange={setPriorityFilter}>
+                  <SelectTrigger className="w-full sm:w-[140px] rounded-2xl">
+                    <Filter className="h-4 w-4 mr-2" />
+                    <SelectValue placeholder="Priority" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Priority</SelectItem>
+                    <SelectItem value="high">High</SelectItem>
+                    <SelectItem value="medium">Medium</SelectItem>
+                    <SelectItem value="low">Low</SelectItem>
+                  </SelectContent>
+                </Select>
+
+                <Select value={sortBy} onValueChange={setSortBy}>
+                  <SelectTrigger className="w-full sm:w-[140px] rounded-2xl">
+                    <SortAsc className="h-4 w-4 mr-2" />
+                    <SelectValue placeholder="Sort" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="dueDate">Due Date</SelectItem>
+                    <SelectItem value="priority">Priority</SelectItem>
+                    <SelectItem value="status">Status</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            {/* Error Message */}
+            {error && (
+              <Alert variant="destructive" className="mb-6">
+                <AlertCircle className="h-4 w-4" />
+                <AlertDescription>{error}</AlertDescription>
+              </Alert>
+            )}
+            
+            {/* Loading State */}
+            {isLoading ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-6">
+                {[1, 2, 3, 4, 5, 6].map((i) => (
+                  <div key={i} className="border border-border/50 rounded-2xl p-6 space-y-4">
+                    <div className="flex justify-between">
+                      <Skeleton className="h-6 w-3/4" />
+                      <Skeleton className="h-6 w-6 rounded-full" />
+                    </div>
+                    <Skeleton className="h-4 w-full" />
+                    <Skeleton className="h-4 w-2/3" />
+                    <div className="flex justify-between pt-2">
+                      <Skeleton className="h-4 w-1/3" />
+                      <Skeleton className="h-4 w-1/4" />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              /* Tasks Grid */
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-6">
+                <AnimatePresence mode="popLayout">
+                  {filteredTasks.map((task, index) => (
+                  <motion.div
+                    key={task.id}
+                    layout
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, scale: 0.95 }}
+                    transition={{ 
+                      duration: 0.3, 
+                      delay: index * 0.05,
+                      layout: { type: "spring", stiffness: 300, damping: 30 }
+                    }}
+                  >
+                    <TaskCard
+                      task={task}
+                      onEdit={handleEditTask}
+                      onDelete={handleDeleteTask}
+                      onToggleStatus={handleToggleStatus}
+                    />
+                  </motion.div>
+                ))}
+                </AnimatePresence>
+              </div>
+            )}
+
+            {/* Empty State */}
+            {!isLoading && filteredTasks.length === 0 && (
+              <div className="text-center py-12">
+                <div className="max-w-md mx-auto">
+                  <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <Plus className="h-8 w-8 text-primary" />
+                  </div>
+                  <h3 className="text-lg font-semibold text-foreground mb-2">
+                    {searchTerm || statusFilter !== "all" || priorityFilter !== "all" 
+                      ? "No tasks found" 
+                      : "No tasks yet"
+                    }
+                  </h3>
+                  <p className="text-muted-foreground mb-6">
+                    {searchTerm || statusFilter !== "all" || priorityFilter !== "all"
+                      ? "Try adjusting your filters to see more tasks."
+                      : "Create your first task to get started with your productivity journey."
+                    }
+                  </p>
+                  <Link to="/create-task">
+                    <Button className="rounded-2xl">
+                      Create Task
+                    </Button>
+                  </Link>
+                </div>
+              </div>
+            )}
+          </div>
+        </main>
+      </div>
+    </div>
+  );
+};
+
+export default Tasks;

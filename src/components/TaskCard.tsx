@@ -1,0 +1,164 @@
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { 
+  Calendar, 
+  Clock, 
+  Edit, 
+  Trash2, 
+  CheckCircle2,
+  Circle,
+  AlertCircle
+} from "lucide-react";
+import { cn } from "@/lib/utils";
+import { useState } from "react";
+
+export interface Task {
+  id: string;
+  title: string;
+  description: string;
+  status: "todo" | "in-progress" | "completed";
+  priority: "low" | "medium" | "high";
+  dueDate: string;
+  createdAt: string;
+  tags?: string[];
+}
+
+interface TaskCardProps {
+  task: Task;
+  onEdit?: (task: Task) => void;
+  onDelete?: (taskId: string) => void;
+  onToggleStatus?: (taskId: string) => void;
+}
+
+const TaskCard = ({ task, onEdit, onDelete, onToggleStatus }: TaskCardProps) => {
+  const [showControls, setShowControls] = useState(false);
+  
+  const priorityColors = {
+    low: "bg-success/10 text-success border-success/20",
+    medium: "bg-warning/10 text-warning border-warning/20",
+    high: "bg-destructive/10 text-destructive border-destructive/20"
+  };
+
+  const statusIcons = {
+    "todo": Circle,
+    "in-progress": Clock,
+    "completed": CheckCircle2
+  };
+
+  const statusColors = {
+    "todo": "text-muted-foreground",
+    "in-progress": "text-warning",
+    "completed": "text-success"
+  };
+
+  const StatusIcon = statusIcons[task.status];
+  const isOverdue = new Date(task.dueDate) < new Date() && task.status !== "completed";
+
+  return (
+    <div 
+      className="transform hover:-translate-y-1 transition-all duration-150 ease-out will-change-transform" 
+      onMouseEnter={() => setShowControls(true)}
+      onMouseLeave={() => setShowControls(false)}
+    >
+      <Card className="hover:shadow-md border-border/50 rounded-2xl bg-card overflow-hidden w-full max-w-full">
+        <CardContent className="p-3 sm:p-6">
+          {/* Header */}
+          <div className="flex items-start justify-between mb-3 sm:mb-4">
+            <div className="flex items-center space-x-3">
+              <div className="hover:scale-110 transition-transform duration-150">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => onToggleStatus?.(task.id)}
+                  className={cn("p-0 hover:bg-transparent", statusColors[task.status])}
+                >
+                  <StatusIcon className="h-5 w-5" />
+                </Button>
+              </div>
+              <div>
+                <h3 className={cn(
+                  "font-semibold text-foreground text-sm sm:text-base line-clamp-1 max-w-[150px] sm:max-w-[180px] md:max-w-full",
+                  task.status === "completed" && "line-through text-muted-foreground"
+                )}>
+                  {task.title}
+                </h3>
+                <Badge 
+                  variant="outline" 
+                  className={cn("text-xs mt-1", priorityColors[task.priority])}
+                >
+                  {task.priority} priority
+                </Badge>
+              </div>
+            </div>
+            
+            <div 
+              className={`flex items-center space-x-1 transition-opacity duration-200 ${showControls ? 'opacity-100' : 'opacity-0'}`}
+            >
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => onEdit?.(task)}
+                className="rounded-xl text-muted-foreground hover:text-primary hover:scale-105 transition-transform"
+              >
+                <Edit className="h-4 w-4" />
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => onDelete?.(task.id)}
+                className="rounded-xl text-muted-foreground hover:text-destructive hover:scale-105 transition-transform"
+              >
+                <Trash2 className="h-4 w-4" />
+              </Button>
+            </div>
+          </div>
+
+        {/* Description */}
+        <p className="text-muted-foreground text-xs sm:text-sm mb-3 sm:mb-4 line-clamp-2">
+          {task.description}
+        </p>
+
+        {/* Tags */}
+        {task.tags && task.tags.length > 0 && (
+          <div className="flex flex-wrap gap-1 sm:gap-2 mb-3 sm:mb-4">
+            {task.tags.map((tag, index) => (
+              <Badge 
+                key={index}
+                variant="secondary" 
+                className="text-xs rounded-full px-2 py-1"
+              >
+                {tag}
+              </Badge>
+            ))}
+          </div>
+        )}
+
+        {/* Footer */}
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between text-xs text-muted-foreground gap-2 sm:gap-0">
+          <div className="flex items-center">
+            <div className={cn(
+              "flex items-center space-x-1",
+              isOverdue && "text-destructive"
+            )}>
+              {isOverdue && (
+                <div className="animate-pulse">
+                  <AlertCircle className="h-3 w-3" />
+                </div>
+              )}
+              <Calendar className="h-3 w-3" />
+              <span className="truncate">Due {new Date(task.dueDate).toLocaleDateString()}</span>
+            </div>
+          </div>
+          
+          <div className="text-xs">
+            Created {new Date(task.createdAt).toLocaleDateString()}
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+    </div>
+  );
+};
+
+export default TaskCard;

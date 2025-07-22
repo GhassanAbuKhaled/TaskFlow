@@ -1,0 +1,89 @@
+/* Responsive utilities */
+
+/* Custom breakpoint for very small screens (360px and below) */
+@media (max-width: 360px) {
+  header {
+    padding-left: 0.375rem !important;
+    padding-right: 0.375rem !important;
+    padding-top: 0.25rem !important;
+    padding-bottom: 0.25rem !important;
+  }
+  
+  header .text-base {
+    font-size: 0.875rem !important;
+  }
+}
+
+/* Custom breakpoint for 518px and below */
+@media (max-width: 518px) {
+  /* Force single column layout for stat cards */
+  .dashboard-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(1, minmax(0, 1fr)) !important;
+  }
+  
+  /* Make card content more compact */
+  .dashboard-stats-grid .rounded-2xl {
+    margin-bottom: 0.5rem;
+  }
+  
+  .dashboard-stats-grid [class*="CardHeader"] {
+    padding: 0.75rem 0.75rem 0.25rem 0.75rem;
+  }
+  
+  .dashboard-stats-grid [class*="CardContent"] {
+    padding: 0.25rem 0.75rem 0.75rem 0.75rem;
+  }
+  
+  .dashboard-stats-grid [class*="CardTitle"] {
+    font-size: 0.75rem;
+  }
+  
+  .dashboard-stats-grid .text-2xl {
+    font-size: 1.25rem;
+    line-height: 1.75rem;
+  }
+}
+
+/* Extra small devices (phones, 540px and down) */
+@media (max-width: 540px) {
+  /* Prevent horizontal scrolling */
+  body, html {
+    overflow-x: hidden;
+    max-width: 100%;
+  }
+  
+  /* Adjust container padding */
+  .container {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
+  
+  /* Reduce text sizes */
+  .xs-text-sm {
+    font-size: 0.875rem;
+  }
+  
+  .xs-text-xs {
+    font-size: 0.75rem;
+  }
+  
+  /* Stack items on small screens */
+  .xs-stack {
+    flex-direction: column;
+  }
+  
+  /* Adjust spacing */
+  .xs-p-2 {
+    padding: 0.5rem;
+  }
+  
+  .xs-gap-1 {
+    gap: 0.25rem;
+  }
+}
+
+/* Small devices (landscape phones, 640px and up) */
+@media (min-width: 640px) {
+  /* Add sm specific styles here */
+}

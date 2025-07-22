@@ -1,0 +1,226 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Import responsive styles */
+@import './styles/responsive.css';
+
+/* Enhanced Task Management App Design System - Calm & Elegant Colors */
+
+@layer base {
+  :root {
+    /* Calmer, more soothing color palette */
+    --background: 210 50% 98%; /* #f5f8fc - softer blue-tinted white */
+    --foreground: 215 25% 27%; /* Softer slate-gray for text */
+
+    --card: 0 0% 100%; /* Pure white cards */
+    --card-foreground: 215 25% 27%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 215 25% 27%;
+
+    /* Calming blue primary - softer and more serene */
+    --primary: 199 80% 55%; /* Serene blue */
+    --primary-foreground: 0 0% 100%;
+    --primary-light: 199 80% 95%; /* Very light serene blue */
+
+    /* Warm neutral secondary */
+    --secondary: 210 20% 96%; /* Softer gray background */
+    --secondary-foreground: 215 25% 24%; /* Dark gray text */
+    --secondary-accent: 250 95% 76%; /* Softer lavender accent */
+
+    /* Balanced muted tones */
+    --muted: 210 20% 94%; /* Light muted background */
+    --muted-foreground: 215 20% 46%; /* Medium gray text */
+
+    /* Soft accent colors */
+    --accent: 152 45% 94%; /* Very light sage green */
+    --accent-foreground: 152 45% 30%; /* Muted sage green */
+
+    /* Calm status colors */
+    --success: 160 67% 52%; /* Softer teal-green */
+    --warning: 43 96% 68%; /* Softer amber */
+    --destructive: 0 65% 65%; /* Softer coral red */
+    --destructive-foreground: 0 0% 100%;
+
+    /* Subtle UI elements */
+    --border: 220 14% 88%; /* Soft border */
+    --input: 220 14% 94%; /* Input background */
+    --ring: 214 84% 56%; /* Focus ring matches primary */
+
+    /* Enhanced layout values - softer shadows */
+    --radius: 1rem;
+    --shadow-soft: 0 1px 3px 0 hsl(210 30% 10% / 0.08), 0 1px 2px 0 hsl(210 30% 10% / 0.06);
+    --shadow-medium: 0 4px 6px -1px hsl(210 30% 10% / 0.10), 0 2px 4px -1px hsl(210 30% 10% / 0.06);
+    --shadow-large: 0 20px 25px -5px hsl(210 30% 10% / 0.10), 0 10px 10px -5px hsl(210 30% 10% / 0.04);
+
+    /* Calming gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(220 80% 65%));
+    --gradient-soft: linear-gradient(135deg, hsl(var(--background)), hsl(210 30% 96%));
+
+    /* Sidebar colors - calmer tones */
+    --sidebar-background: 210 30% 99%; /* Light background */
+    --sidebar-foreground: 215 25% 27%; /* Dark text */
+    --sidebar-primary: 199 80% 55%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 210 30% 94%;
+    --sidebar-accent-foreground: 215 25% 27%;
+    --sidebar-border: 210 30% 90%;
+    --sidebar-ring: 199 80% 55%;
+  }
+
+  .dark {
+    /* Elegant dark mode with muted deep tones */
+    --background: 224 36% 9%; /* Deep charcoal-blue background */
+    --foreground: 213 27% 84%; /* Soft light gray text */
+
+    --card: 224 36% 13%; /* Dark cards with blue undertone */
+    --card-foreground: 213 27% 84%;
+
+    --popover: 224 36% 13%;
+    --popover-foreground: 213 27% 84%;
+
+    /* Soft primary for dark mode */
+    --primary: 214 84% 65%; /* Soft blue for dark */
+    --primary-foreground: 224 36% 9%;
+    --primary-light: 214 84% 20%;
+
+    /* Dark mode secondary */
+    --secondary: 224 36% 17%; /* Dark secondary background */
+    --secondary-foreground: 213 27% 84%;
+    --secondary-accent: 262 83% 65%;
+
+    /* Dark muted tones */
+    --muted: 224 36% 16%; /* Muted dark background */
+    --muted-foreground: 220 14% 71%; /* Readable muted text */
+
+    /* Dark accent */
+    --accent: 142 52% 20%; /* Dark sage accent */
+    --accent-foreground: 142 52% 85%;
+
+    /* Soft dark mode status colors */
+    --success: 142 69% 55%; /* Gentle green for dark */
+    --warning: 35 91% 70%; /* Warm orange for dark */
+    --destructive: 0 70% 70%; /* Soft red for dark */
+    --destructive-foreground: 224 36% 9%;
+
+    /* Dark UI elements */
+    --border: 224 36% 22%; /* Subtle dark borders */
+    --input: 224 36% 17%; /* Dark input backgrounds */
+    --ring: 214 84% 65%;
+
+    /* Dark sidebar */
+    --sidebar-background: 222 47% 15%;
+    --sidebar-foreground: 210 40% 95%;
+    --sidebar-primary: 217 91% 65%;
+    --sidebar-primary-foreground: 222 47% 11%;
+    --sidebar-accent: 222 47% 20%;
+    --sidebar-accent-foreground: 210 40% 95%;
+    --sidebar-border: 222 47% 25%;
+    --sidebar-ring: 217 91% 65%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border transition-colors duration-300;
+  }
+
+  body {
+    @apply bg-background text-foreground font-inter antialiased;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+  
+  /* Prevent text shifting during theme changes */
+  button, a {
+    text-rendering: geometricPrecision;
+    -webkit-font-smoothing: antialiased;
+  }
+  
+  /* Stabilize large buttons */
+  .large-button-stable {
+    height: 60px !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+  }
+
+  /* Enhanced utility classes */
+  .shadow-soft {
+    box-shadow: var(--shadow-soft);
+  }
+
+  .shadow-medium {
+    box-shadow: var(--shadow-medium);
+  }
+
+  .shadow-large {
+    box-shadow: var(--shadow-large);
+  }
+
+  .gradient-primary {
+    background: var(--gradient-primary);
+  }
+
+  .gradient-soft {
+    background: var(--gradient-soft);
+  }
+  
+  .bg-gradient-soft {
+    background: linear-gradient(135deg, hsl(210 50% 98%), hsl(200 60% 98%));
+  }
+  
+  .dark .bg-gradient-soft {
+    background: linear-gradient(135deg, hsl(224 36% 9%), hsl(222 47% 11%));
+  }
+
+  /* Mobile-first responsive text */
+  .text-responsive-sm {
+    @apply text-sm md:text-base;
+  }
+
+  .text-responsive-base {
+    @apply text-base md:text-lg;
+  }
+
+  .text-responsive-lg {
+    @apply text-lg md:text-xl lg:text-2xl;
+  }
+
+  .text-responsive-xl {
+    @apply text-xl md:text-2xl lg:text-3xl;
+  }
+
+  .text-responsive-2xl {
+    @apply text-2xl md:text-3xl lg:text-4xl;
+  }
+
+  /* Smooth transitions for interactive elements */
+  .transition-smooth {
+    @apply transition-all duration-300 ease-in-out;
+  }
+
+  /* Enhanced hover effects */
+  .hover-lift {
+    @apply transition-smooth hover:shadow-medium hover:-translate-y-0.5;
+  }
+
+  .hover-scale {
+    @apply transition-smooth hover:scale-105;
+  }
+
+  /* Reduced motion support */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
