@@ -57,6 +57,5 @@
       "url": "/create-task",
       "description": "Create a new task"
     }
-  ],
-  "start_url": "/"
+  ]
 }
