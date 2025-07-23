@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
+import { useDemoContext } from "@/contexts/DemoContext";
 import { cn } from "@/lib/utils";
 
 interface SidebarProps {
@@ -27,6 +28,7 @@ const Sidebar = ({ isOpen, onToggle, userName }: SidebarProps) => {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const { user, logout } = useAuth();
+  const { isDemoMode } = useDemoContext();
   const [isCollapsed, setIsCollapsed] = useState(false);
   
   const displayName = userName || (user ? user.username : "User");
@@ -183,44 +185,46 @@ const Sidebar = ({ isOpen, onToggle, userName }: SidebarProps) => {
           {/* Spacer to push content to the top */}
           <div className="flex-grow"></div>
           
-          {/* User Profile Section */}
-          <div className="p-3 md:p-4 border-t border-sidebar-border">
-            {!isCollapsed ? (
-              <div className="flex flex-col space-y-3">
-                <div className="flex items-center space-x-3">
-                  <div className="w-10 h-10 bg-sidebar-primary/20 rounded-full flex items-center justify-center flex-shrink-0">
+          {/* User Profile Section - Only shown when not in demo mode */}
+          {!isDemoMode && (
+            <div className="p-3 md:p-4 border-t border-sidebar-border">
+              {!isCollapsed ? (
+                <div className="flex flex-col space-y-3">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-10 h-10 bg-sidebar-primary/20 rounded-full flex items-center justify-center flex-shrink-0">
+                      <User className="h-5 w-5 text-sidebar-primary" />
+                    </div>
+                    <span className="text-sm font-medium text-sidebar-foreground truncate max-w-[150px]" title={displayName}>
+                      {displayName}
+                    </span>
+                  </div>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={handleLogout}
+                    className="w-full justify-start rounded-xl text-sidebar-foreground hover:text-destructive hover:bg-destructive/10 transition-smooth"
+                  >
+                    <LogOut className="h-4 w-4 mr-3" />
+                    <span className="font-medium text-sm">{t('navbar.logout')}</span>
+                  </Button>
+                </div>
+              ) : (
+                <div className="flex flex-col items-center space-y-3">
+                  <div className="w-10 h-10 bg-sidebar-primary/20 rounded-full flex items-center justify-center">
                     <User className="h-5 w-5 text-sidebar-primary" />
                   </div>
-                  <span className="text-sm font-medium text-sidebar-foreground truncate max-w-[150px]" title={displayName}>
-                    {displayName}
-                  </span>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={handleLogout}
+                    className="rounded-xl text-sidebar-foreground hover:text-destructive hover:bg-destructive/10 transition-smooth p-2"
+                  >
+                    <LogOut className="h-4 w-4" />
+                  </Button>
                 </div>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={handleLogout}
-                  className="w-full justify-start rounded-xl text-sidebar-foreground hover:text-destructive hover:bg-destructive/10 transition-smooth"
-                >
-                  <LogOut className="h-4 w-4 mr-3" />
-                  <span className="font-medium text-sm">{t('navbar.logout')}</span>
-                </Button>
-              </div>
-            ) : (
-              <div className="flex flex-col items-center space-y-3">
-                <div className="w-10 h-10 bg-sidebar-primary/20 rounded-full flex items-center justify-center">
-                  <User className="h-5 w-5 text-sidebar-primary" />
-                </div>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={handleLogout}
-                  className="rounded-xl text-sidebar-foreground hover:text-destructive hover:bg-destructive/10 transition-smooth p-2"
-                >
-                  <LogOut className="h-4 w-4" />
-                </Button>
-              </div>
-            )}
-          </div>
+              )}
+            </div>
+          )}
         </div>
       </div>
     </>
