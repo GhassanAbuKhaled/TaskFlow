@@ -1,21 +1,21 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo, ElementType } from "react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
-import { 
-  LayoutDashboard, 
-  CheckSquare, 
-  Plus, 
-  Calendar,
-  Settings,
-  Archive,
-  X,
-  User,
-  LogOut
-} from "lucide-react";
+import { LayoutDashboard, CheckSquare, Plus, X, User, LogOut } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useDemoContext } from "@/contexts/DemoContext";
 import { cn } from "@/lib/utils";
+
+interface NavItem {
+  name: string;
+  href: string;
+  icon: ElementType;
+  isProfile?: boolean;
+  showAtBottom?: boolean;
+  isDanger?: boolean;
+  onClick?: () => void;
+}
 
 interface SidebarProps {
   isOpen: boolean;
@@ -40,20 +40,13 @@ const Sidebar = ({ isOpen, onToggle, userName }: SidebarProps) => {
 
   // Handle responsive behavior
   useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth >= 1024) {
-        // Desktop: always show sidebar, allow collapse
-        setIsCollapsed(false);
-      }
-    };
-
+    const handleResize = () => window.innerWidth >= 1024 && setIsCollapsed(false);
     window.addEventListener("resize", handleResize);
     handleResize(); // Initial check
-
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const navigation = [
+  const navigation = useMemo(() => [
     {
       name: t('navbar.dashboard'),
       href: "/dashboard",
@@ -69,30 +62,91 @@ const Sidebar = ({ isOpen, onToggle, userName }: SidebarProps) => {
       href: "/create-task",
       icon: Plus,
     },
-    // {
-    //   name: t('navbar.calendar'),
-    //   href: "/calendar",
-    //   icon: Calendar,
-    // },
-    // {
-    //   name: t('navbar.archive'),
-    //   href: "/archive",
-    //   icon: Archive,
-    // },
-    // {
-    //   name: t('navbar.settings'),
-    //   href: "/settings",
-    //   icon: Settings,
-    // },
-  ];
+    // Only add profile and logout when not in demo mode
+    ...(!isDemoMode ? [
+      {
+        name: displayName,
+        href: "#",
+        icon: User,
+        isProfile: true,
+        showAtBottom: true
+      },
+      {
+        name: t('navbar.logout'),
+        href: "#",
+        icon: LogOut,
+        onClick: handleLogout,
+        showAtBottom: true,
+        isDanger: true
+      }
+    ] : [])
+  ], [t, isDemoMode, displayName, handleLogout]);
 
   const isActive = (href: string) => location.pathname === href;
+  const handleLinkClick = () => window.innerWidth < 1024 && onToggle();
+  
+  // Render a standard navigation item
+  const renderNavItem = (item: NavItem) => {
+    const Icon = item.icon;
+    const active = isActive(item.href);
 
-  const handleLinkClick = () => {
-    // Close sidebar on mobile when clicking a link
-    if (window.innerWidth < 1024) {
-      onToggle();
-    }
+    return (
+      <Link key={item.name} to={item.href} onClick={item.onClick || handleLinkClick}>
+        <Button
+          variant={active ? "default" : "ghost"}
+          className={cn(
+            "w-full rounded-2xl transition-smooth",
+            isCollapsed ? "p-5 flex justify-center" : "px-4 justify-start text-left",
+            active 
+              ? "bg-sidebar-primary text-sidebar-primary-foreground shadow-medium hover:shadow-large" 
+              : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+          )}
+        >
+          <Icon className={cn("h-4 w-4 md:h-5 md:w-5", !isCollapsed && "mr-3")} />
+          {!isCollapsed && (
+            <span className="font-medium text-sm md:text-base">{item.name}</span>
+          )}
+        </Button>
+      </Link>
+    );
+  };
+  
+  // Render a bottom navigation item (profile or logout)
+  const renderBottomNavItem = (item: NavItem) => {
+    const Icon = item.icon;
+    
+    return (
+      <Link key={item.name} to={item.href} onClick={item.onClick || handleLinkClick}>
+        {item.isProfile && !isCollapsed ? (
+          <div className="flex items-center space-x-3 mb-3 px-2">
+            <div className="w-10 h-10 bg-sidebar-primary/20 rounded-full flex items-center justify-center flex-shrink-0">
+              <Icon className="h-5 w-5 text-sidebar-primary" />
+            </div>
+            <span className="text-sm font-medium text-sidebar-foreground truncate max-w-[150px]" title={item.name}>
+              {item.name}
+            </span>
+          </div>
+        ) : (
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={item.onClick}
+            className={cn(
+              "rounded-xl transition-smooth",
+              isCollapsed ? "p-2 flex justify-center w-full" : "w-full justify-start px-4",
+              item.isDanger 
+                ? "text-sidebar-foreground hover:text-destructive hover:bg-destructive/10" 
+                : "text-sidebar-foreground hover:bg-sidebar-accent"
+            )}
+          >
+            <Icon className={cn("h-4 w-4 md:h-5 md:w-5", !isCollapsed && "mr-3")} />
+            {!isCollapsed && !item.isProfile && (
+              <span className="font-medium text-sm">{item.name}</span>
+            )}
+          </Button>
+        )}
+      </Link>
+    );
   };
 
   return (
@@ -132,14 +186,15 @@ const Sidebar = ({ isOpen, onToggle, userName }: SidebarProps) => {
                 onClick={() => setIsCollapsed(!isCollapsed)}
                 className="hidden lg:flex rounded-xl text-sidebar-foreground hover:bg-sidebar-accent transition-smooth"
               >
-                <div className={cn(
-                  "transition-transform duration-300",
-                  isCollapsed ? "rotate-180" : "rotate-0"
-                )}>
-                  <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
-                    <path d="M2 8l4-4v3h8v2H6v3l-4-4z"/>
-                  </svg>
-                </div>
+                <svg 
+                  width="16" 
+                  height="16" 
+                  viewBox="0 0 16 16" 
+                  fill="currentColor"
+                  className={cn("transition-transform duration-300", isCollapsed ? "rotate-180" : "rotate-0")}
+                >
+                  <path d="M2 8l4-4v3h8v2H6v3l-4-4z"/>
+                </svg>
               </Button>
               
               {/* Mobile close button */}
@@ -154,76 +209,19 @@ const Sidebar = ({ isOpen, onToggle, userName }: SidebarProps) => {
             </div>
           </div>
 
-          {/* Navigation */}
+          {/* Main Navigation */}
           <nav className="flex-1 p-3 md:p-4 space-y-2 overflow-hidden">
-            {navigation.map((item) => {
-              const Icon = item.icon;
-              const active = isActive(item.href);
-
-              return (
-                <Link key={item.name} to={item.href} onClick={handleLinkClick}>
-                  <Button
-                    variant={active ? "default" : "ghost"}
-                    className={cn(
-                      "w-full rounded-2xl transition-smooth",
-                      isCollapsed ? "p-5 flex justify-center" : "px-4 justify-start text-left",
-                      active 
-                        ? "bg-sidebar-primary text-sidebar-primary-foreground shadow-medium hover:shadow-large" 
-                        : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
-                    )}
-                  >
-                    <Icon className={cn("h-4 w-4 md:h-5 md:w-5", !isCollapsed && "mr-3")} />
-                    {!isCollapsed && (
-                      <span className="font-medium text-sm md:text-base">{item.name}</span>
-                    )}
-                  </Button>
-                </Link>
-              );
-            })}
+            {navigation.filter(item => !item.showAtBottom).map(renderNavItem)}
           </nav>
 
           {/* Spacer to push content to the top */}
           <div className="flex-grow"></div>
           
-          {/* User Profile Section - Only shown when not in demo mode */}
-          {!isDemoMode && (
-            <div className="p-3 md:p-4 border-t border-sidebar-border">
-              {!isCollapsed ? (
-                <div className="flex flex-col space-y-3">
-                  <div className="flex items-center space-x-3">
-                    <div className="w-10 h-10 bg-sidebar-primary/20 rounded-full flex items-center justify-center flex-shrink-0">
-                      <User className="h-5 w-5 text-sidebar-primary" />
-                    </div>
-                    <span className="text-sm font-medium text-sidebar-foreground truncate max-w-[150px]" title={displayName}>
-                      {displayName}
-                    </span>
-                  </div>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={handleLogout}
-                    className="w-full justify-start rounded-xl text-sidebar-foreground hover:text-destructive hover:bg-destructive/10 transition-smooth"
-                  >
-                    <LogOut className="h-4 w-4 mr-3" />
-                    <span className="font-medium text-sm">{t('navbar.logout')}</span>
-                  </Button>
-                </div>
-              ) : (
-                <div className="flex flex-col items-center space-y-3">
-                  <div className="w-10 h-10 bg-sidebar-primary/20 rounded-full flex items-center justify-center">
-                    <User className="h-5 w-5 text-sidebar-primary" />
-                  </div>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={handleLogout}
-                    className="rounded-xl text-sidebar-foreground hover:text-destructive hover:bg-destructive/10 transition-smooth p-2"
-                  >
-                    <LogOut className="h-4 w-4" />
-                  </Button>
-                </div>
-              )}
-            </div>
+          {/* Bottom Navigation (User Profile & Logout) */}
+          {navigation.some(item => item.showAtBottom) && (
+            <nav className="p-3 md:p-4 space-y-2 border-t border-sidebar-border">
+              {navigation.filter(item => item.showAtBottom).map(renderBottomNavItem)}
+            </nav>
           )}
         </div>
       </div>
