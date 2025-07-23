@@ -1,17 +1,14 @@
-import * as React from "react"
+import { useState, useEffect, ReactNode } from "react"
 
-import type {
-  ToastActionElement,
-  ToastProps,
-} from "@/components/ui/toast"
+import type { ToastActionElement, ToastProps } from "@/components/ui/toast"
 
 const TOAST_LIMIT = 1
 const TOAST_REMOVE_DELAY = 1000000
 
 type ToasterToast = ToastProps & {
   id: string
-  title?: React.ReactNode
-  description?: React.ReactNode
+  title?: ReactNode
+  description?: ReactNode
   action?: ToastActionElement
 }
 
@@ -56,16 +53,11 @@ interface State {
 const toastTimeouts = new Map<string, ReturnType<typeof setTimeout>>()
 
 const addToRemoveQueue = (toastId: string) => {
-  if (toastTimeouts.has(toastId)) {
-    return
-  }
+  if (toastTimeouts.has(toastId)) return
 
   const timeout = setTimeout(() => {
     toastTimeouts.delete(toastId)
-    dispatch({
-      type: "REMOVE_TOAST",
-      toastId: toastId,
-    })
+    dispatch({ type: "REMOVE_TOAST", toastId })
   }, TOAST_REMOVE_DELAY)
 
   toastTimeouts.set(toastId, timeout)
@@ -125,9 +117,7 @@ let memoryState: State = { toasts: [] }
 
 function dispatch(action: Action) {
   memoryState = reducer(memoryState, action)
-  listeners.forEach((listener) => {
-    listener(memoryState)
-  })
+  listeners.forEach(listener => listener(memoryState))
 }
 
 type Toast = Omit<ToasterToast, "id">
@@ -136,10 +126,7 @@ function toast({ ...props }: Toast) {
   const id = genId()
 
   const update = (props: ToasterToast) =>
-    dispatch({
-      type: "UPDATE_TOAST",
-      toast: { ...props, id },
-    })
+    dispatch({ type: "UPDATE_TOAST", toast: { ...props, id } })
   const dismiss = () => dispatch({ type: "DISMISS_TOAST", toastId: id })
 
   dispatch({
@@ -148,29 +135,21 @@ function toast({ ...props }: Toast) {
       ...props,
       id,
       open: true,
-      onOpenChange: (open) => {
-        if (!open) dismiss()
-      },
+      onOpenChange: (open) => { if (!open) dismiss() },
     },
   })
 
-  return {
-    id: id,
-    dismiss,
-    update,
-  }
+  return { id, dismiss, update }
 }
 
 function useToast() {
-  const [state, setState] = React.useState<State>(memoryState)
+  const [state, setState] = useState<State>(memoryState)
 
-  React.useEffect(() => {
+  useEffect(() => {
     listeners.push(setState)
     return () => {
       const index = listeners.indexOf(setState)
-      if (index > -1) {
-        listeners.splice(index, 1)
-      }
+      if (index > -1) listeners.splice(index, 1)
     }
   }, [state])
 
