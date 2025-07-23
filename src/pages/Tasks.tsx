@@ -10,11 +10,12 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import Header from "@/components/Header";
 import Sidebar from "@/components/Sidebar";
 import TaskCard, { Task } from "@/components/TaskCard";
+import SEO from "@/components/SEO";
 import { useTaskContext } from "@/contexts/TaskContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { useDemoContext } from "@/contexts/DemoContext";
 import { Plus, Search, Filter, SortAsc, AlertCircle } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 
 type FilterProps = {
   searchTerm: string;
@@ -219,10 +220,16 @@ const TaskList = ({
 
 const Tasks = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { t } = useTranslation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const { tasks, deleteTask, toggleTaskStatus, isLoading, error, fetchTasks } = useTaskContext();
   const { user } = useAuth();
+  
+  // Calculate task statistics for meta description
+  const todoCount = tasks.filter(task => task.status === "todo").length;
+  const inProgressCount = tasks.filter(task => task.status === "in-progress").length;
+  const completedCount = tasks.filter(task => task.status === "completed").length;
   
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
@@ -271,8 +278,21 @@ const Tasks = () => {
     await toggleTaskStatus(taskId);
   };
 
+  // Create dynamic meta description based on task counts
+  const metaDescription = t('tasks.metaDescription', {
+    total: tasks.length,
+    todo: todoCount,
+    inProgress: inProgressCount,
+    completed: completedCount
+  });
+
   return (
     <div className="min-h-screen bg-background transition-colors duration-300 flex flex-col overflow-x-hidden">
+      <SEO 
+        title={t('tasks.title')} 
+        description={metaDescription}
+        keywords="task management, todo list, productivity, task tracking"
+      />
       <Header 
         onToggleSidebar={() => setSidebarOpen(!sidebarOpen)}
       />

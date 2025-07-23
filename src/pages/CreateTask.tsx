@@ -10,15 +10,17 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import Header from "@/components/Header";
 import Sidebar from "@/components/Sidebar";
+import SEO from "@/components/SEO";
 import { useTaskContext } from "@/contexts/TaskContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { useDemoContext } from "@/contexts/DemoContext";
 import { ArrowLeft, Save, X, AlertCircle } from "lucide-react";
 import { DateInput } from "@/components/ui/date-input";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams, useLocation } from "react-router-dom";
 
 const CreateTask = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { t } = useTranslation();
   const { id } = useParams();
   const isEdit = Boolean(id);
@@ -114,8 +116,19 @@ const CreateTask = () => {
     }
   };
 
+  // Create dynamic meta title and description
+  const pageTitle = isEdit ? t('taskForm.editTitle') : t('taskForm.createTitle');
+  const metaDescription = isEdit 
+    ? t('taskForm.editMetaDescription', { title: formData.title })
+    : t('taskForm.createMetaDescription');
+
   return (
     <div className="min-h-screen bg-background transition-colors duration-300 flex flex-col overflow-x-hidden">
+      <SEO 
+        title={pageTitle} 
+        description={metaDescription}
+        keywords="task creation, task management, productivity, task details"
+      />
       <Header 
         onToggleSidebar={() => setSidebarOpen(!sidebarOpen)}
       />

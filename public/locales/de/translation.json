@@ -35,6 +35,8 @@
     }
   },
   "dashboard": {
+    "title": "Dashboard",
+    "metaDescription": "Aufgabenverwaltungs-Dashboard mit {{total}} Aufgaben insgesamt, {{completed}} abgeschlossen, {{inProgress}} in Bearbeitung und {{overdue}} überfällig.",
     "welcome": "Willkommen zurück, {{username}}! 👋",
     "welcomeDemo": "Willkommen im Demo-Modus! 👋",
     "subtitle": "Hier ist, was heute mit Ihren Aufgaben passiert.",
@@ -62,6 +64,7 @@
   },
   "tasks": {
     "title": "Meine Aufgaben",
+    "metaDescription": "Verwalten Sie Ihre Aufgaben: {{total}} Aufgaben insgesamt, {{todo}} zu erledigen, {{inProgress}} in Bearbeitung und {{completed}} abgeschlossen.",
     "filter": "Filter",
     "sort": "Sortieren",
     "search": "Aufgaben suchen...",
@@ -77,6 +80,8 @@
   "taskForm": {
     "createTitle": "Neue Aufgabe erstellen",
     "editTitle": "Aufgabe bearbeiten",
+    "createMetaDescription": "Erstellen Sie eine neue Aufgabe mit Titel, Beschreibung, Status, Priorität, Fälligkeitsdatum und Tags.",
+    "editMetaDescription": "Bearbeiten Sie Aufgabe '{{title}}' - aktualisieren Sie Details, Status, Priorität, Fälligkeitsdatum und Tags.",
     "createSubtitle": "Fügen Sie Ihrer Liste eine neue Aufgabe hinzu",
     "editSubtitle": "Aktualisieren Sie Ihre Aufgabendetails",
     "taskDetails": "Aufgabendetails",

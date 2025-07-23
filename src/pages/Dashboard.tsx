@@ -8,6 +8,7 @@ import Header from "@/components/Header";
 import Sidebar from "@/components/Sidebar";
 import TaskCard from "@/components/TaskCard";
 import Spinner from "@/components/ui/spinner";
+import SEO from "@/components/SEO";
 import { useTaskContext } from "@/contexts/TaskContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { useDemoContext } from "@/contexts/DemoContext";
@@ -20,10 +21,11 @@ import {
   Calendar,
   AlertCircle
 } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 
 const Dashboard = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { t } = useTranslation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const { tasks, deleteTask, toggleTaskStatus, isLoading, error, fetchTasks } = useTaskContext();
@@ -44,8 +46,22 @@ const Dashboard = () => {
 
   const recentTasks = tasks.slice(0, 3);
 
+  // Create dynamic meta description
+  const metaDescription = t('dashboard.metaDescription', {
+    total: stats.total,
+    completed: stats.completed,
+    inProgress: stats.inProgress,
+    overdue: stats.overdue
+  });
+
   return (
     <div className="min-h-screen bg-background transition-colors duration-300 flex flex-col">
+      <SEO 
+        title={t('dashboard.title')} 
+        description={metaDescription}
+        keywords="task dashboard, productivity, task statistics, task management"
+        ogImage="/placeholder.svg"
+      />
       <Header 
         onToggleSidebar={() => setSidebarOpen(!sidebarOpen)}
       />

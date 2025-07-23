@@ -35,6 +35,8 @@
     }
   },
   "dashboard": {
+    "title": "Dashboard",
+    "metaDescription": "Task management dashboard with {{total}} total tasks, {{completed}} completed, {{inProgress}} in progress, and {{overdue}} overdue tasks.",
     "welcome": "Welcome back, {{username}}! 👋",
     "welcomeDemo": "Welcome to Demo Mode! 👋",
     "subtitle": "Here's what's happening with your tasks today.",
@@ -62,6 +64,7 @@
   },
   "tasks": {
     "title": "My Tasks",
+    "metaDescription": "Manage your tasks: {{total}} total tasks, {{todo}} to do, {{inProgress}} in progress, and {{completed}} completed.",
     "filter": "Filter",
     "sort": "Sort",
     "search": "Search tasks...",
@@ -77,6 +80,8 @@
   "taskForm": {
     "createTitle": "Create New Task",
     "editTitle": "Edit Task",
+    "createMetaDescription": "Create a new task with title, description, status, priority, due date, and tags.",
+    "editMetaDescription": "Edit task '{{title}}' - update details, status, priority, due date, and tags.",
     "createSubtitle": "Add a new task to your list",
     "editSubtitle": "Update your task details",
     "taskDetails": "Task Details",

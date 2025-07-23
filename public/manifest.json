@@ -1,21 +1,62 @@
 {
-  "name": "TaskFlow",
+  "name": "TaskFlow - Task Management Application",
   "short_name": "TaskFlow",
-  "description": "A beautiful and calming task management application",
+  "description": "A beautiful and calming task management application that helps you organize your life with elegance",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#4F46E5",
+  "orientation": "any",
+  "categories": ["productivity", "organization", "tasks"],
+  "lang": "en",
+  "dir": "ltr",
+  "prefer_related_applications": false,
   "icons": [
     {
       "src": "/favicon.svg",
       "sizes": "any",
-      "type": "image/svg+xml"
+      "type": "image/svg+xml",
+      "purpose": "any"
     },
     {
       "src": "/favicon-192.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     }
-  ]
+  ],
+  "screenshots": [
+    {
+      "src": "/screenshots/dashboard.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "platform": "wide",
+      "label": "Dashboard view of TaskFlow"
+    },
+    {
+      "src": "/screenshots/tasks.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "platform": "wide",
+      "label": "Tasks management in TaskFlow"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Dashboard",
+      "url": "/dashboard",
+      "description": "View your task dashboard"
+    },
+    {
+      "name": "My Tasks",
+      "url": "/tasks",
+      "description": "View all your tasks"
+    },
+    {
+      "name": "Create Task",
+      "url": "/create-task",
+      "description": "Create a new task"
+    }
+  ],
+  "_development_note": "This is a development manifest. Update URLs when deploying to production."
 }
