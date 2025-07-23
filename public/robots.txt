@@ -1,10 +1,21 @@
-# TaskFlow - Task Management Application (Development Environment)
+# TaskFlow - Task Management Application
 
-# Disallow all crawlers in development environment
+# Allow all web crawlers
 User-agent: *
-Disallow: /
+Allow: /
 
-# Note: For production, replace this file with:
-# User-agent: *
-# Allow: /
-# Sitemap: https://yourdomain.com/sitemap.xml
+# Sitemap location
+Sitemap: https://taskflow.ghassanabukhaled.com/sitemap.xml
+
+# Specific rules for major crawlers
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Twitterbot
+Allow: /
+
+User-agent: facebookexternalhit
+Allow: /

@@ -58,5 +58,5 @@
       "description": "Create a new task"
     }
   ],
-  "_development_note": "This is a development manifest. Update URLs when deploying to production."
+  "start_url": "https://taskflow.ghassanabukhaled.com/"
 }
