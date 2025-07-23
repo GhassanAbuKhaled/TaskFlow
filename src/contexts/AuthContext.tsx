@@ -34,7 +34,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     if (token && storedUser) {
       try {
         setUser(JSON.parse(storedUser));
-      } catch (error) {
+      } catch {
         console.error(t('toast.parseUserDataError'));
         localStorage.removeItem('user');
         localStorage.removeItem('token');
