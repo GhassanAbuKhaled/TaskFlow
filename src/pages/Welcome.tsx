@@ -7,6 +7,7 @@ import LanguageSwitcher from "@/components/LanguageSwitcher";
 import heroImage from "@/assets/hero-image.jpg";
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
+import { ImageWithLoading } from "@/components/ui/image-with-loading";
 
 // Animation variants with smoother transitions
 const fadeInUp = {
@@ -179,13 +180,12 @@ const Welcome = () => {
                 transition={{ type: "tween", ease: "easeOut", duration: 0.4, delay: 0.2 }}
               >
                 <div className="relative rounded-3xl overflow-hidden shadow-large">
-                  <motion.img 
-                    src={heroImage}
-                    alt="Task Management Interface"
-                    className="w-full h-auto"
-                    whileHover={{ scale: 1.02 }}
-                    transition={{ duration: 0.3 }}
-                  />
+                 <ImageWithLoading 
+                  src={heroImage}
+                  alt="Task Management Interface"
+                  className="w-full h-full object-cover"
+                  loadingSize="lg"
+                />
                   <div className="absolute inset-0 bg-gradient-to-t from-primary/10 to-transparent dark:from-primary/20"></div>
                 </div>
               </motion.div>
