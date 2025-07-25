@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { AllProviders } from '@/test/test-utils';
-import { setupMocks, mockTask } from '@/test/test-mocks';
+import { setupMocks, mockTask } from '@/__mocks__/test-mocks';
 import TaskCard from '@/components/TaskCard';
 
 setupMocks();

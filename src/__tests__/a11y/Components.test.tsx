@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render } from '@testing-library/react';
 import { AllProviders } from '@/test/test-utils';
-import { setupMocks, mockTask } from '@/test/test-mocks';
+import { setupMocks, mockTask } from '@/__mocks__/test-mocks';
 import TaskCard from '@/components/TaskCard';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';

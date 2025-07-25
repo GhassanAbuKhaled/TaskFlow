@@ -1,28 +1,12 @@
 import { vi } from 'vitest';
 
-// Common API mocks
+// Use manual mocks from __mocks__ folder
 export const mockAPI = () => {
-  vi.mock('@/lib/api', () => ({
-    authAPI: {
-      login: vi.fn(),
-      logout: vi.fn(),
-    },
-    tasksAPI: {
-      getAllTasks: vi.fn(),
-      createTask: vi.fn(),
-      updateTask: vi.fn(),
-      deleteTask: vi.fn(),
-    },
-  }));
+  vi.mock('@/lib/api');
 };
 
-// Common toast mock
 export const mockToast = () => {
-  vi.mock('@/components/ui/use-toast', () => ({
-    useToast: () => ({
-      toast: vi.fn(),
-    }),
-  }));
+  vi.mock('@/components/ui/use-toast');
 };
 
 // Mock task data
