@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render } from '@/test/test-utils';
 import Header from '@/components/Header';
 import { AuthProvider } from '@/contexts/AuthContext';
