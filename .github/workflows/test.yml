@@ -24,12 +24,3 @@ jobs:
     
     - name: Run all tests
       run: npm run test:run
-    
-    - name: Run integration tests
-      run: npm run test:run -- src/__tests__/integration/
-    
-    - name: Run performance tests
-      run: npm run test:run -- src/__tests__/performance/
-    
-    - name: Run accessibility tests
-      run: npm run test:run -- src/__tests__/a11y/
