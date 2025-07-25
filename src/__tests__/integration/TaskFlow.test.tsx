@@ -1,54 +1,11 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { I18nextProvider } from 'react-i18next';
-import i18n from '@/i18n';
-import { AuthProvider } from '@/contexts/AuthContext';
-import { TaskProvider } from '@/contexts/TaskContext';
-import { DemoProvider } from '@/contexts/DemoContext';
+import { AllProviders } from '@/test/test-utils';
+import { setupMocks, mockTask } from '@/test/test-mocks';
 import TaskCard from '@/components/TaskCard';
 
-vi.mock('@/lib/api', () => ({
-  authAPI: {
-    login: vi.fn(),
-    logout: vi.fn(),
-  },
-  tasksAPI: {
-    getAllTasks: vi.fn(),
-    createTask: vi.fn(),
-    updateTask: vi.fn(),
-    deleteTask: vi.fn(),
-  },
-}));
-
-vi.mock('@/components/ui/use-toast', () => ({
-  useToast: () => ({
-    toast: vi.fn(),
-  }),
-}));
-
-const AllProviders = ({ children }: { children: React.ReactNode }) => (
-  <I18nextProvider i18n={i18n}>
-    <AuthProvider>
-      <DemoProvider>
-        <TaskProvider>
-          {children}
-        </TaskProvider>
-      </DemoProvider>
-    </AuthProvider>
-  </I18nextProvider>
-);
-
-const mockTask = {
-  id: '1',
-  title: 'Test Task',
-  description: 'Test Description',
-  status: 'todo' as const,
-  priority: 'high' as const,
-  dueDate: '2024-12-31',
-  tags: ['work'],
-  createdAt: '2024-01-01',
-};
+setupMocks();
 
 describe('Task Management Integration Flow', () => {
   const mockOnEdit = vi.fn();
