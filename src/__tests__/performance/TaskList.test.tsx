@@ -1,10 +1,14 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render } from '@testing-library/react';
-import { AllProviders } from '@/test/test-utils';
-import { setupMocks } from '@/__mocks__/test-mocks';
+import { I18nextProvider } from 'react-i18next';
+import i18n from '@/i18n';
 import TaskCard from '@/components/TaskCard';
 
-setupMocks();
+const TestWrapper = ({ children }: { children: React.ReactNode }) => (
+  <I18nextProvider i18n={i18n}>
+    {children}
+  </I18nextProvider>
+);
 
 const createMockTask = (id: number) => ({
   id: id.toString(),
@@ -26,14 +30,14 @@ describe('Performance Tests', () => {
     const startTime = performance.now();
     
     render(
-      <AllProviders>
+      <TestWrapper>
         <TaskCard
           task={createMockTask(1)}
           onEdit={mockOnEdit}
           onDelete={mockOnDelete}
           onToggleStatus={mockOnToggleStatus}
         />
-      </AllProviders>
+      </TestWrapper>
     );
     
     const endTime = performance.now();
@@ -58,9 +62,9 @@ describe('Performance Tests', () => {
     ));
     
     render(
-      <AllProviders>
+      <TestWrapper>
         <div>{tasks}</div>
-      </AllProviders>
+      </TestWrapper>
     );
     
     const endTime = performance.now();
@@ -74,14 +78,14 @@ describe('Performance Tests', () => {
     const task = createMockTask(1);
     
     const { rerender } = render(
-      <AllProviders>
+      <TestWrapper>
         <TaskCard
           task={task}
           onEdit={mockOnEdit}
           onDelete={mockOnDelete}
           onToggleStatus={mockOnToggleStatus}
         />
-      </AllProviders>
+      </TestWrapper>
     );
     
     const startTime = performance.now();
@@ -90,14 +94,14 @@ describe('Performance Tests', () => {
     const updatedTask = { ...task, status: 'completed' as const };
     
     rerender(
-      <AllProviders>
+      <TestWrapper>
         <TaskCard
           task={updatedTask}
           onEdit={mockOnEdit}
           onDelete={mockOnDelete}
           onToggleStatus={mockOnToggleStatus}
         />
-      </AllProviders>
+      </TestWrapper>
     );
     
     const endTime = performance.now();
@@ -113,14 +117,14 @@ describe('Performance Tests', () => {
     // Render and unmount multiple components
     for (let i = 0; i < 5; i++) {
       const { unmount } = render(
-        <AllProviders>
+        <TestWrapper>
           <TaskCard
             task={createMockTask(i)}
             onEdit={mockOnEdit}
             onDelete={mockOnDelete}
             onToggleStatus={mockOnToggleStatus}
           />
-        </AllProviders>
+        </TestWrapper>
       );
       unmount();
     }

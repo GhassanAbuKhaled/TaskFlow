@@ -1,11 +1,26 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { AllProviders } from '@/test/test-utils';
-import { setupMocks, mockTask } from '@/__mocks__/test-mocks';
+import { I18nextProvider } from 'react-i18next';
+import i18n from '@/i18n';
 import TaskCard from '@/components/TaskCard';
 
-setupMocks();
+const mockTask = {
+  id: '1',
+  title: 'Test Task',
+  description: 'Test Description',
+  status: 'todo' as const,
+  priority: 'high' as const,
+  dueDate: '2024-12-31',
+  tags: ['work'],
+  createdAt: '2024-01-01',
+};
+
+const TestWrapper = ({ children }: { children: React.ReactNode }) => (
+  <I18nextProvider i18n={i18n}>
+    {children}
+  </I18nextProvider>
+);
 
 describe('Task Management Integration Flow', () => {
   const mockOnEdit = vi.fn();
@@ -20,14 +35,14 @@ describe('Task Management Integration Flow', () => {
     const user = userEvent.setup();
     
     render(
-      <AllProviders>
+      <TestWrapper>
         <TaskCard
           task={mockTask}
           onEdit={mockOnEdit}
           onDelete={mockOnDelete}
           onToggleStatus={mockOnToggleStatus}
         />
-      </AllProviders>
+      </TestWrapper>
     );
 
     const buttons = screen.queryAllByRole('button');
@@ -47,14 +62,14 @@ describe('Task Management Integration Flow', () => {
       const taskWithStatus = { ...mockTask, status };
       
       render(
-        <AllProviders>
+        <TestWrapper>
           <TaskCard
             task={taskWithStatus}
             onEdit={mockOnEdit}
             onDelete={mockOnDelete}
             onToggleStatus={mockOnToggleStatus}
           />
-        </AllProviders>
+        </TestWrapper>
       );
 
       expect(document.body).toBeInTheDocument();
@@ -68,14 +83,14 @@ describe('Task Management Integration Flow', () => {
       const taskWithPriority = { ...mockTask, priority };
       
       render(
-        <AllProviders>
+        <TestWrapper>
           <TaskCard
             task={taskWithPriority}
             onEdit={mockOnEdit}
             onDelete={mockOnDelete}
             onToggleStatus={mockOnToggleStatus}
           />
-        </AllProviders>
+        </TestWrapper>
       );
 
       expect(document.body).toBeInTheDocument();
