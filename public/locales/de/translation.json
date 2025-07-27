@@ -190,7 +190,7 @@
     "loginSuccess": "Anmeldung erfolgreich",
     "loginWelcome": "Willkommen zurück, {{username}}!",
     "loginError": "Anmeldung fehlgeschlagen",
-    "loginErrorMessage": "Anmeldung fehlgeschlagen. Bitte überprüfen Sie Ihre Anmeldedaten.",
+    "loginErrorMessage": "Ein unerwarteter Fehler ist bei der Anmeldung aufgetreten. Bitte versuchen Sie es erneut.",
     "registerSuccess": "Registrierung erfolgreich",
     "registerMessage": "Ihr Konto wurde erstellt. Bitte melden Sie sich an.",
     "registerError": "Registrierung fehlgeschlagen",
@@ -204,6 +204,20 @@
     "demoTaskUpdated": "Aufgabe im Demo-Modus aktualisiert. Änderungen bleiben nicht erhalten, wenn Sie die Seite verlassen.",
     "demoTaskDeleted": "Aufgabe im Demo-Modus gelöscht.",
     "demoTaskStatusUpdated": "Aufgabenstatus im Demo-Modus aktualisiert.",
-    "demoProviderError": "useDemoContext muss innerhalb eines DemoProviders verwendet werden"
+    "demoProviderError": "useDemoContext muss innerhalb eines DemoProviders verwendet werden",
+    "networkError": "Verbindungsfehler",
+    "networkErrorMessage": "Verbindung zum Server nicht möglich. Bitte überprüfen Sie Ihre Internetverbindung.",
+    "invalidCredentials": "Ungültige Anmeldedaten",
+    "invalidCredentialsMessage": "Die eingegebene E-Mail oder das Passwort ist falsch.",
+    "accountBlocked": "Konto gesperrt",
+    "accountBlockedMessage": "Ihr Konto wurde vorübergehend gesperrt. Bitte kontaktieren Sie den Support.",
+    "tooManyAttempts": "Zu viele Versuche",
+    "tooManyAttemptsMessage": "Zu viele Anmeldeversuche. Bitte versuchen Sie es später erneut.",
+    "serverError": "Serverfehler",
+    "serverErrorMessage": "Der Server ist derzeit nicht verfügbar. Bitte versuchen Sie es später erneut.",
+    "emailExists": "E-Mail bereits vorhanden",
+    "emailExistsMessage": "Ein Konto mit dieser E-Mail existiert bereits. Bitte verwenden Sie eine andere E-Mail.",
+    "validationError": "Validierungsfehler",
+    "validationErrorMessage": "Bitte überprüfen Sie Ihre Eingabe und versuchen Sie es erneut."
   }
 }

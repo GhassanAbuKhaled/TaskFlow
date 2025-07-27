@@ -2,6 +2,7 @@ import { createContext, useContext, useState, useEffect, ReactNode, useMemo } fr
 import { authAPI } from '@/lib/api';
 import { useToast } from '@/components/ui/use-toast';
 import { useTranslation } from 'react-i18next';
+import { parseAPIError, getErrorResponse } from '@/lib/errorHandler';
 
 interface User {
   id: number;
@@ -34,6 +35,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isLoading, setIsLoading] = useState(true);
   const { toast } = useToast();
   const { t } = useTranslation();
+
+
 
   useEffect(() => {
     const token = localStorage.getItem('access_token');
@@ -79,12 +82,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       
       return true;
     } catch (error: any) {
-      const message = error.response?.data?.message || t('toast.loginErrorMessage');
-      toast({
-        title: t('toast.loginError'),
-        description: message,
-        variant: "destructive",
-      });
+      const parsedError = parseAPIError(error);
+      const errorResponse = getErrorResponse(parsedError, t, 'toast.loginError', 'toast.loginErrorMessage');
+      toast({ title: errorResponse.title, description: errorResponse.message, variant: "destructive" });
       return false;
     } finally {
       setIsLoading(false);
@@ -104,12 +104,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       
       return true;
     } catch (error: any) {
-      const message = error.response?.data?.message || t('toast.registerErrorMessage');
-      toast({
-        title: t('toast.registerError'),
-        description: message || t('toast.registerErrorMessage'),
-        variant: "destructive",
-      });
+      const parsedError = parseAPIError(error);
+      const errorResponse = getErrorResponse(parsedError, t, 'toast.registerError', 'toast.registerErrorMessage');
+      toast({ title: errorResponse.title, description: errorResponse.message, variant: "destructive" });
       return false;
     } finally {
       setIsLoading(false);

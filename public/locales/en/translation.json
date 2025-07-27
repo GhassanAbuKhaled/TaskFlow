@@ -190,7 +190,7 @@
     "loginSuccess": "Login successful",
     "loginWelcome": "Welcome back, {{username}}!",
     "loginError": "Login failed",
-    "loginErrorMessage": "Login failed. Please check your credentials.",
+    "loginErrorMessage": "An unexpected error occurred during login. Please try again.",
     "registerSuccess": "Registration successful",
     "registerMessage": "Your account has been created. Please log in.",
     "registerError": "Registration failed",
@@ -204,6 +204,20 @@
     "demoTaskUpdated": "Task updated in demo mode. Changes won't persist after you leave.",
     "demoTaskDeleted": "Task deleted in demo mode.",
     "demoTaskStatusUpdated": "Task status updated in demo mode.",
-    "demoProviderError": "useDemoContext must be used within a DemoProvider"
+    "demoProviderError": "useDemoContext must be used within a DemoProvider",
+    "networkError": "Connection Error",
+    "networkErrorMessage": "Unable to connect to the server. Please check your internet connection.",
+    "invalidCredentials": "Invalid Credentials",
+    "invalidCredentialsMessage": "The email or password you entered is incorrect.",
+    "accountBlocked": "Account Blocked",
+    "accountBlockedMessage": "Your account has been temporarily blocked. Please contact support.",
+    "tooManyAttempts": "Too Many Attempts",
+    "tooManyAttemptsMessage": "Too many login attempts. Please try again later.",
+    "serverError": "Server Error",
+    "serverErrorMessage": "The server is currently unavailable. Please try again later.",
+    "emailExists": "Email Already Exists",
+    "emailExistsMessage": "An account with this email already exists. Please use a different email.",
+    "validationError": "Validation Error",
+    "validationErrorMessage": "Please check your input and try again."
   }
 }
