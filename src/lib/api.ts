@@ -1,9 +1,19 @@
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import { ErrorFactory } from './errors/factory';
 
 const API_URL = 'http://localhost:8080/api';
 
-// Create axios instance with default config
+interface LoginCredentials {
+  email: string;
+  password: string;
+}
+
+interface RegisterData {
+  username: string;
+  email: string;
+  password: string;
+}
+
 const api = axios.create({
   baseURL: API_URL,
   headers: {
@@ -12,7 +22,6 @@ const api = axios.create({
   timeout: 10000,
 });
 
-// Request interceptor
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('access_token');
@@ -35,13 +44,11 @@ api.interceptors.request.use(
   (error) => Promise.reject(ErrorFactory.fromAxiosError(error))
 );
 
-// Response interceptor
 api.interceptors.response.use(
   (response) => response,
   (error) => {
     const appError = ErrorFactory.fromAxiosError(error);
     
-    // Handle auth errors globally
     if (appError.type === 'AUTH' && 'status' in appError && appError.status === 401) {
       localStorage.clear();
       window.location.href = '/login';
@@ -52,18 +59,17 @@ api.interceptors.response.use(
 );
 
 export const authAPI = {
-  login: (credentials) => api.post('/auth/login', credentials),
-  register: (userData) => api.post('/auth/register', userData),
+  login: (credentials: LoginCredentials): Promise<AxiosResponse> => api.post('/auth/login', credentials),
+  register: (userData: RegisterData): Promise<AxiosResponse> => api.post('/auth/register', userData),
 };
 
-// Tasks API
 export const tasksAPI = {
-  getAllTasks: () => api.get('/tasks'),
-  getTaskById: (id) => api.get(`/tasks/${id}`),
-  createTask: (task) => api.post('/tasks', task),
-  updateTask: (id, task) => api.put(`/tasks/${id}`, task),
-  deleteTask: (id) => api.delete(`/tasks/${id}`),
-  updateTaskStatus: (id, status) => api.patch(`/tasks/${id}/status`, { status }),
+  getAllTasks: (): Promise<AxiosResponse> => api.get('/tasks'),
+  getTaskById: (id: string): Promise<AxiosResponse> => api.get(`/tasks/${id}`),
+  createTask: (task: any): Promise<AxiosResponse> => api.post('/tasks', task),
+  updateTask: (id: string, task: any): Promise<AxiosResponse> => api.put(`/tasks/${id}`, task),
+  deleteTask: (id: string): Promise<AxiosResponse> => api.delete(`/tasks/${id}`),
+  updateTaskStatus: (id: string, status: string): Promise<AxiosResponse> => api.patch(`/tasks/${id}/status`, { status }),
 };
 
 export default api;
