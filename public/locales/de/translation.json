@@ -75,7 +75,9 @@
     "createFirstTaskDescription": "Erstellen Sie Ihre erste Aufgabe, um mit Ihrer Produktivitätsreise zu beginnen.",
     "allStatus": "Alle Status",
     "allPriority": "Alle Prioritäten",
-    "manage": "Verwalten und organisieren Sie Ihre Aufgaben effizient"
+    "manage": "Verwalten und organisieren Sie Ihre Aufgaben effizient",
+    "deleteTask": "Aufgabe löschen",
+    "deleteTaskConfirm": "Sind Sie sicher, dass Sie '{{title}}' löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden."
   },
   "taskForm": {
     "createTitle": "Neue Aufgabe erstellen",
@@ -171,6 +173,40 @@
     "changesNotSaved": "Änderungen werden nicht dauerhaft gespeichert",
     "signUp": "Registrieren",
     "signIn": "Anmelden"
+  },
+  "toast": {
+    "error": "Fehler",
+    "loadTasksError": "Aufgaben konnten nicht geladen werden. Bitte versuchen Sie es erneut.",
+    "createTaskSuccess": "Aufgabe erstellt",
+    "createTaskMessage": "Ihre Aufgabe wurde erfolgreich erstellt.",
+    "createTaskError": "Aufgabe konnte nicht erstellt werden. Bitte versuchen Sie es erneut.",
+    "updateTaskSuccess": "Aufgabe aktualisiert",
+    "updateTaskMessage": "Ihre Aufgabe wurde erfolgreich aktualisiert.",
+    "updateTaskError": "Aufgabe konnte nicht aktualisiert werden. Bitte versuchen Sie es erneut.",
+    "deleteTaskSuccess": "Aufgabe gelöscht",
+    "deleteTaskMessage": "Die Aufgabe wurde erfolgreich gelöscht.",
+    "deleteTaskError": "Aufgabe konnte nicht gelöscht werden. Bitte versuchen Sie es erneut.",
+    "updateStatusSuccess": "Aufgabe aktualisiert",
+    "updateStatusMessage": "Aufgabenstatus wurde aktualisiert.",
+    "updateStatusError": "Aufgabenstatus konnte nicht aktualisiert werden. Bitte versuchen Sie es erneut.",
+    "loginSuccess": "Anmeldung erfolgreich",
+    "loginWelcome": "Willkommen zurück, {{username}}!",
+    "loginError": "Anmeldung fehlgeschlagen",
+    "loginErrorMessage": "Ein unerwarteter Fehler ist bei der Anmeldung aufgetreten. Bitte versuchen Sie es erneut.",
+    "registerSuccess": "Registrierung erfolgreich",
+    "registerMessage": "Ihr Konto wurde erstellt. Bitte melden Sie sich an.",
+    "registerError": "Registrierung fehlgeschlagen",
+    "registerErrorMessage": "Registrierung fehlgeschlagen. Bitte versuchen Sie es erneut.",
+    "logoutSuccess": "Abgemeldet",
+    "logoutMessage": "Sie wurden erfolgreich abgemeldet.",
+    "parseUserDataError": "Gespeicherte Benutzerdaten konnten nicht verarbeitet werden",
+    "authProviderError": "useAuth muss innerhalb eines AuthProviders verwendet werden",
+    "demoMode": "Demo-Modus"
+  },
+  "common": {
+    "delete": "Löschen",
+    "cancel": "Abbrechen",
+    "confirm": "Bestätigen"
   },
   "toast": {
     "error": "Fehler",
