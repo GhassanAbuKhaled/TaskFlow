@@ -15,6 +15,7 @@ import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useConfirmation } from "@/hooks/useConfirmation";
+import { useDemoContext } from "@/contexts/DemoContext";
 
 export interface Task {
   id: string;
@@ -37,9 +38,15 @@ interface TaskCardProps {
 const TaskCard = ({ task, onEdit, onDelete, onToggleStatus }: TaskCardProps) => {
   const [showControls, setShowControls] = useState(false);
   const { t } = useTranslation();
+  const { isDemoMode } = useDemoContext();
   const confirmation = useConfirmation();
 
   const handleDelete = async () => {
+    if (isDemoMode) {
+      onDelete?.(task.id);
+      return;
+    }
+    
     const confirmed = await confirmation.confirm({
       title: t('tasks.deleteTask'),
       description: t('tasks.deleteTaskConfirm', { title: task.title }),
@@ -177,16 +184,18 @@ const TaskCard = ({ task, onEdit, onDelete, onToggleStatus }: TaskCardProps) => 
       </CardContent>
     </Card>
     
-    <ConfirmationDialog
-      open={confirmation.isOpen}
-      onOpenChange={() => confirmation.handleCancel()}
-      title={confirmation.options?.title || ''}
-      description={confirmation.options?.description || ''}
-      confirmText={confirmation.options?.confirmText}
-      cancelText={confirmation.options?.cancelText}
-      variant={confirmation.options?.variant}
-      onConfirm={confirmation.handleConfirm}
-    />
+    {!isDemoMode && (
+      <ConfirmationDialog
+        open={confirmation.isOpen}
+        onOpenChange={() => confirmation.handleCancel()}
+        title={confirmation.options?.title || ''}
+        description={confirmation.options?.description || ''}
+        confirmText={confirmation.options?.confirmText}
+        cancelText={confirmation.options?.cancelText}
+        variant={confirmation.options?.variant}
+        onConfirm={confirmation.handleConfirm}
+      />
+    )}
     </div>
   );
 };
