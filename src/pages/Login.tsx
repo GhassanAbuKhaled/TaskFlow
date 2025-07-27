@@ -26,7 +26,7 @@ const Login = () => {
     validation: {
       email: {
         required: true,
-        rules: [ValidationRules.email(t)]
+        rules: [ValidationRules.email(t), ValidationRules.maxLength(100, t)]
       },
       password: {
         required: true,
