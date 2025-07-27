@@ -5,6 +5,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { useAuth } from "./AuthContext";
 import { useDemoContext } from "./DemoContext";
 import { useTranslation } from "react-i18next";
+import { transformServerTask, transformClientTask, transformStatus } from "@/lib/taskTransformers";
 
 interface TaskContextType {
   tasks: Task[];
@@ -64,7 +65,8 @@ export const TaskProvider = ({ children }: TaskProviderProps) => {
     
     try {
       const response = await tasksAPI.getAllTasks();
-      setTasks(response.data);
+      const transformedTasks = response.data.map(transformServerTask);
+      setTasks(transformedTasks);
     } catch (err: any) {
       console.error("Failed to fetch tasks:", err);
       setError(err.response?.data?.message || "Failed to load tasks. Please try again.");
@@ -90,13 +92,12 @@ export const TaskProvider = ({ children }: TaskProviderProps) => {
     setError(null);
     
     try {
-      const response = await tasksAPI.createTask({
-        ...taskData,
-        createdAt: new Date().toISOString(),
-      });
+      const serverTaskData = transformClientTask(taskData);
+      const response = await tasksAPI.createTask(serverTaskData);
       
       // Add the new task to the state
-      setTasks((prevTasks) => [...prevTasks, response.data]);
+      const transformedTask = transformServerTask(response.data);
+      setTasks((prevTasks) => [...prevTasks, transformedTask]);
       
       toast({
         title: t('toast.createTaskSuccess'),
@@ -127,7 +128,8 @@ export const TaskProvider = ({ children }: TaskProviderProps) => {
     setError(null);
     
     try {
-      await tasksAPI.updateTask(updatedTask.id, updatedTask);
+      const serverTaskData = transformClientTask(updatedTask);
+      await tasksAPI.updateTask(updatedTask.id, serverTaskData);
       
       // Update the task in the state
       setTasks((prevTasks) =>
@@ -209,7 +211,8 @@ export const TaskProvider = ({ children }: TaskProviderProps) => {
         : "todo";
     
     try {
-      await tasksAPI.updateTaskStatus(taskId, nextStatus);
+      const serverStatus = transformStatus(nextStatus);
+      await tasksAPI.updateTaskStatus(taskId, serverStatus);
       
       // Update the task in the state
       setTasks((prevTasks) =>
