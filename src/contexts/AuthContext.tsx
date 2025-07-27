@@ -4,9 +4,18 @@ import { useToast } from '@/components/ui/use-toast';
 import { useTranslation } from 'react-i18next';
 
 interface User {
-  id: string;
+  id: number;
   username: string;
   email: string;
+}
+
+interface AuthResponse {
+  access_token: string;
+  refresh_token: string;
+  token_type: string;
+  expires_in: number;
+  user: User;
+  issued_at: string;
 }
 
 interface AuthContextType {
@@ -27,17 +36,22 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const { t } = useTranslation();
 
   useEffect(() => {
-    // Check if user is already logged in
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('access_token');
     const storedUser = localStorage.getItem('user');
+    const expiresAt = localStorage.getItem('token_expires_at');
     
-    if (token && storedUser) {
-      try {
-        setUser(JSON.parse(storedUser));
-      } catch {
-        console.error(t('toast.parseUserDataError'));
-        localStorage.removeItem('user');
-        localStorage.removeItem('token');
+    if (token && storedUser && expiresAt) {
+      const now = Date.now();
+      const expiry = parseInt(expiresAt);
+      
+      if (now < expiry) {
+        try {
+          setUser(JSON.parse(storedUser));
+        } catch {
+          localStorage.clear();
+        }
+      } else {
+        localStorage.clear();
       }
     }
     
@@ -48,9 +62,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setIsLoading(true);
     try {
       const response = await authAPI.login({ email, password });
-      const { token, user } = response.data;
+      const { access_token, refresh_token, expires_in, user }: AuthResponse = response.data;
       
-      localStorage.setItem('token', token);
+      const expiresAt = Date.now() + (expires_in * 1000);
+      
+      localStorage.setItem('access_token', access_token);
+      localStorage.setItem('refresh_token', refresh_token);
+      localStorage.setItem('token_expires_at', expiresAt.toString());
       localStorage.setItem('user', JSON.stringify(user));
       setUser(user);
       
@@ -64,7 +82,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       const message = error.response?.data?.message || t('toast.loginErrorMessage');
       toast({
         title: t('toast.loginError'),
-        description: message || t('toast.loginErrorMessage'),
+        description: message,
         variant: "destructive",
       });
       return false;
@@ -99,7 +117,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const logout = () => {
-    authAPI.logout();
+    localStorage.clear();
     setUser(null);
     toast({
       title: t('toast.logoutSuccess'),

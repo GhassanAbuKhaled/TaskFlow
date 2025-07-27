@@ -10,26 +10,30 @@ const api = axios.create({
   },
 });
 
-// Add request interceptor to include auth token
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+    const token = localStorage.getItem('access_token');
+    const expiresAt = localStorage.getItem('token_expires_at');
+    
+    if (token && expiresAt) {
+      const now = Date.now();
+      const expiry = parseInt(expiresAt);
+      
+      if (now < expiry) {
+        config.headers.Authorization = `Bearer ${token}`;
+      } else {
+        localStorage.clear();
+        window.location.href = '/login';
+      }
     }
     return config;
   },
   (error) => Promise.reject(error)
 );
 
-// Auth API
 export const authAPI = {
   login: (credentials) => api.post('/auth/login', credentials),
   register: (userData) => api.post('/auth/register', userData),
-  logout: () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-  },
 };
 
 // Tasks API
