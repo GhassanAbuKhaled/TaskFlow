@@ -75,7 +75,9 @@
     "createFirstTaskDescription": "Create your first task to get started with your productivity journey.",
     "allStatus": "All Status",
     "allPriority": "All Priority",
-    "manage": "Manage and organize your tasks efficiently"
+    "manage": "Manage and organize your tasks efficiently",
+    "deleteTask": "Delete Task",
+    "deleteTaskConfirm": "Are you sure you want to delete '{{title}}'? This action cannot be undone."
   },
   "taskForm": {
     "createTitle": "Create New Task",
@@ -219,6 +221,11 @@
     "emailExistsMessage": "An account with this email already exists. Please use a different email.",
     "validationError": "Validation Error",
     "validationErrorMessage": "Please check your input and try again."
+  },
+  "common": {
+    "delete": "Delete",
+    "cancel": "Cancel",
+    "confirm": "Confirm"
   },
   "errors": {
     "badRequest": "Bad Request",

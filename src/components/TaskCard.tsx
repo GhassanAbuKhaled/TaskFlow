@@ -1,6 +1,7 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { ConfirmationDialog } from "@/components/ui/confirmation-dialog";
 import { 
   Calendar, 
   Clock, 
@@ -13,6 +14,7 @@ import {
 import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useConfirmation } from "@/hooks/useConfirmation";
 
 export interface Task {
   id: string;
@@ -35,6 +37,21 @@ interface TaskCardProps {
 const TaskCard = ({ task, onEdit, onDelete, onToggleStatus }: TaskCardProps) => {
   const [showControls, setShowControls] = useState(false);
   const { t } = useTranslation();
+  const confirmation = useConfirmation();
+
+  const handleDelete = async () => {
+    const confirmed = await confirmation.confirm({
+      title: t('tasks.deleteTask'),
+      description: t('tasks.deleteTaskConfirm', { title: task.title }),
+      confirmText: t('common.delete'),
+      cancelText: t('common.cancel'),
+      variant: 'destructive'
+    });
+    
+    if (confirmed) {
+      onDelete?.(task.id);
+    }
+  };
   
   const priorityColors = {
     low: "bg-success/10 text-success border-success/20",
@@ -108,7 +125,7 @@ const TaskCard = ({ task, onEdit, onDelete, onToggleStatus }: TaskCardProps) => 
               <Button
                 variant="ghost"
                 size="sm"
-                onClick={() => onDelete?.(task.id)}
+                onClick={handleDelete}
                 className="rounded-xl text-muted-foreground hover:text-destructive hover:scale-105 transition-transform"
               >
                 <Trash2 className="h-4 w-4" />
@@ -159,6 +176,17 @@ const TaskCard = ({ task, onEdit, onDelete, onToggleStatus }: TaskCardProps) => 
         </div>
       </CardContent>
     </Card>
+    
+    <ConfirmationDialog
+      open={confirmation.isOpen}
+      onOpenChange={() => confirmation.handleCancel()}
+      title={confirmation.options?.title || ''}
+      description={confirmation.options?.description || ''}
+      confirmText={confirmation.options?.confirmText}
+      cancelText={confirmation.options?.cancelText}
+      variant={confirmation.options?.variant}
+      onConfirm={confirmation.handleConfirm}
+    />
     </div>
   );
 };
