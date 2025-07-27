@@ -8,6 +8,7 @@ import { AuthProvider } from "./contexts/AuthContext";
 import { DemoProvider } from "./contexts/DemoContext";
 import { useAuth } from "./contexts/AuthContext";
 import { useDemoContext } from "./contexts/DemoContext";
+import { ErrorBoundary } from "./lib/errors";
 import DemoBanner from "./components/DemoBanner";
 import DemoActivator from "./components/DemoActivator";
 import Welcome from "./pages/Welcome";
@@ -43,49 +44,51 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
 };
 
 const App = () => (
-  <div className="overflow-x-hidden w-full">
-  <QueryClientProvider client={queryClient}>
-    <AuthProvider>
-      <DemoProvider>
-        <TaskProvider>
-          <TooltipProvider>
-            <Toaster />
-            <Sonner />
-            <BrowserRouter>
-            <Routes>
-              <Route path="/" element={<Welcome />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<Register />} />
-              <Route path="/demo" element={<DemoActivator />} />
-              <Route path="/dashboard" element={
-                <ProtectedRoute>
-                  <Dashboard />
-                </ProtectedRoute>
-              } />
-              <Route path="/tasks" element={
-                <ProtectedRoute>
-                  <Tasks />
-                </ProtectedRoute>
-              } />
-              <Route path="/create-task" element={
-                <ProtectedRoute>
-                  <CreateTask />
-                </ProtectedRoute>
-              } />
-              <Route path="/edit-task/:id" element={
-                <ProtectedRoute>
-                  <CreateTask />
-                </ProtectedRoute>
-              } />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </BrowserRouter>
-          </TooltipProvider>
-        </TaskProvider>
-      </DemoProvider>
-    </AuthProvider>
-  </QueryClientProvider>
-  </div>
+  <ErrorBoundary>
+    <div className="overflow-x-hidden w-full">
+      <QueryClientProvider client={queryClient}>
+        <AuthProvider>
+          <DemoProvider>
+            <TaskProvider>
+              <TooltipProvider>
+                <Toaster />
+                <Sonner />
+                <BrowserRouter>
+                  <Routes>
+                    <Route path="/" element={<Welcome />} />
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/register" element={<Register />} />
+                    <Route path="/demo" element={<DemoActivator />} />
+                    <Route path="/dashboard" element={
+                      <ProtectedRoute>
+                        <Dashboard />
+                      </ProtectedRoute>
+                    } />
+                    <Route path="/tasks" element={
+                      <ProtectedRoute>
+                        <Tasks />
+                      </ProtectedRoute>
+                    } />
+                    <Route path="/create-task" element={
+                      <ProtectedRoute>
+                        <CreateTask />
+                      </ProtectedRoute>
+                    } />
+                    <Route path="/edit-task/:id" element={
+                      <ProtectedRoute>
+                        <CreateTask />
+                      </ProtectedRoute>
+                    } />
+                    <Route path="*" element={<NotFound />} />
+                  </Routes>
+                </BrowserRouter>
+              </TooltipProvider>
+            </TaskProvider>
+          </DemoProvider>
+        </AuthProvider>
+      </QueryClientProvider>
+    </div>
+  </ErrorBoundary>
 );
 
 export default App;

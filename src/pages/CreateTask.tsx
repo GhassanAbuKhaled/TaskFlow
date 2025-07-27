@@ -7,15 +7,26 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Alert, AlertDescription } from "@/components/ui/alert";
 import Header from "@/components/Header";
 import Sidebar from "@/components/Sidebar";
 import SEO from "@/components/SEO";
 import { useTaskContext } from "@/contexts/TaskContext";
 import { useAuth } from "@/contexts/AuthContext";
-import { ArrowLeft, Save, X, AlertCircle } from "lucide-react";
+import { useForm } from "@/hooks/useForm";
+import { useErrorHandler } from "@/hooks/useErrorHandler";
+import { ValidationRules } from "@/lib/errors";
+import { ArrowLeft, Save, X } from "lucide-react";
 import { DateInput } from "@/components/ui/date-input";
 import { Link, useNavigate, useParams } from "react-router-dom";
+
+interface TaskForm {
+  title: string;
+  description: string;
+  status: "todo" | "in-progress" | "completed";
+  priority: "low" | "medium" | "high";
+  dueDate: string;
+  tags: string[];
+}
 
 const CreateTask = () => {
   const navigate = useNavigate();
@@ -25,22 +36,50 @@ const CreateTask = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const { addTask, updateTask, getTaskById } = useTaskContext();
   const { user } = useAuth();
+  const { handleError } = useErrorHandler();
+  const [newTag, setNewTag] = useState("");
+  const [originalData, setOriginalData] = useState<TaskForm | null>(null);
 
-  const [formData, setFormData] = useState({
-    title: "",
-    description: "",
-    status: "todo" as "todo" | "in-progress" | "completed",
-    priority: "medium" as "low" | "medium" | "high",
-    dueDate: "",
-    tags: [] as string[]
+  const form = useForm<TaskForm>({
+    initialValues: {
+      title: "",
+      description: "",
+      status: "todo",
+      priority: "medium",
+      dueDate: "",
+      tags: []
+    },
+    validation: {
+      title: {
+        required: true,
+        rules: [ValidationRules.maxLength(100, t)]
+      },
+      description: {
+        rules: [ValidationRules.maxLength(255, t)]
+      },
+      dueDate: {
+        required: true,
+        rules: [ValidationRules.futureDate(t)]
+      }
+    },
+    onSubmit: async (values) => {
+      try {
+        if (isEdit && id) {
+          const existingTask = getTaskById(id);
+          if (existingTask) {
+            await updateTask({ ...existingTask, ...values });
+          }
+        } else {
+          await addTask(values);
+        }
+        navigate("/tasks");
+      } catch (error: any) {
+        handleError(error, isEdit ? 'updateTask' : 'createTask');
+      }
+    }
   });
 
-  const [newTag, setNewTag] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [originalData, setOriginalData] = useState<typeof formData | null>(null);
-
-  // Load existing task data for edit mode (only once)
+  // Load existing task data for edit mode
   useEffect(() => {
     if (isEdit && id && !originalData) {
       const existingTask = getTaskById(id);
@@ -53,26 +92,31 @@ const CreateTask = () => {
           dueDate: existingTask.dueDate,
           tags: existingTask.tags || []
         };
-        setFormData(taskData);
+        form.setValue('title', taskData.title);
+        form.setValue('description', taskData.description);
+        form.setValue('status', taskData.status);
+        form.setValue('priority', taskData.priority);
+        form.setValue('dueDate', taskData.dueDate);
+        form.setValue('tags', taskData.tags);
         setOriginalData(taskData);
       } else {
         navigate("/tasks");
       }
     }
-  }, [isEdit, id, originalData, getTaskById, navigate]);
+  }, [isEdit, id, originalData, getTaskById, navigate, form]);
 
   const hasChanges = useMemo(() => {
     if (!isEdit || !originalData) return true;
     
     return (
-      formData.title !== originalData.title ||
-      formData.description !== originalData.description ||
-      formData.status !== originalData.status ||
-      formData.priority !== originalData.priority ||
-      formData.dueDate !== originalData.dueDate ||
-      JSON.stringify([...formData.tags].sort()) !== JSON.stringify([...originalData.tags].sort())
+      form.values.title !== originalData.title ||
+      form.values.description !== originalData.description ||
+      form.values.status !== originalData.status ||
+      form.values.priority !== originalData.priority ||
+      form.values.dueDate !== originalData.dueDate ||
+      JSON.stringify([...form.values.tags].sort()) !== JSON.stringify([...originalData.tags].sort())
     );
-  }, [isEdit, originalData, formData]);
+  }, [isEdit, originalData, form.values]);
 
   const handleSubmit = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
@@ -82,41 +126,20 @@ const CreateTask = () => {
       return;
     }
     
-    setIsLoading(true);
-    setError(null);
-
-    try {
-      if (isEdit && id) {
-        const existingTask = getTaskById(id);
-        if (existingTask) {
-          await updateTask({ ...existingTask, ...formData });
-        }
-      } else {
-        await addTask(formData);
-      }
-      navigate("/tasks");
-    } catch (err: any) {
-      setError(err.message || "Failed to save task. Please try again.");
-    } finally {
-      setIsLoading(false);
-    }
-  }, [isEdit, hasChanges, formData, id, getTaskById, updateTask, addTask, navigate]);
-
-  const handleInputChange = useCallback((field: string, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
-  }, []);
+    await form.handleSubmit(e);
+  }, [isEdit, hasChanges, navigate, form]);
 
   const addTag = useCallback(() => {
     const trimmedTag = newTag.trim();
-    if (trimmedTag && !formData.tags.includes(trimmedTag)) {
-      setFormData(prev => ({ ...prev, tags: [...prev.tags, trimmedTag] }));
+    if (trimmedTag && !form.values.tags.includes(trimmedTag)) {
+      form.setValue('tags', [...form.values.tags, trimmedTag]);
       setNewTag("");
     }
-  }, [newTag, formData.tags]);
+  }, [newTag, form]);
 
   const removeTag = useCallback((tagToRemove: string) => {
-    setFormData(prev => ({ ...prev, tags: prev.tags.filter(tag => tag !== tagToRemove) }));
-  }, []);
+    form.setValue('tags', form.values.tags.filter(tag => tag !== tagToRemove));
+  }, [form]);
 
   const handleKeyPress = useCallback((e: React.KeyboardEvent) => {
     if (e.key === "Enter") {
@@ -128,9 +151,9 @@ const CreateTask = () => {
   const { pageTitle, metaDescription } = useMemo(() => ({
     pageTitle: isEdit ? t('taskForm.editTitle') : t('taskForm.createTitle'),
     metaDescription: isEdit 
-      ? t('taskForm.editMetaDescription', { title: formData.title })
+      ? t('taskForm.editMetaDescription', { title: form.values.title })
       : t('taskForm.createMetaDescription')
-  }), [isEdit, t, formData.title]);
+  }), [isEdit, t, form.values.title]);
 
   const statusOptions = useMemo(() => [
     { value: "todo", label: t('status.todo') },
@@ -191,12 +214,6 @@ const CreateTask = () => {
               </CardHeader>
               
               <CardContent className="p-3 sm:p-6">
-                {error && (
-                  <Alert variant="destructive" className="mb-6">
-                    <AlertCircle className="h-4 w-4" />
-                    <AlertDescription>{error}</AlertDescription>
-                  </Alert>
-                )}
                 <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
                   {/* Title */}
                   <div className="space-y-2">
@@ -207,11 +224,17 @@ const CreateTask = () => {
                       id="title"
                       type="text"
                       placeholder={t('taskForm.enterTitle')}
-                      value={formData.title}
-                      onChange={(e) => handleInputChange("title", e.target.value)}
-                      className="rounded-2xl border-border/50 focus:border-primary/50"
+                      value={form.values.title}
+                      onChange={(e) => form.setValue('title', e.target.value)}
+                      onBlur={() => form.validateField('title')}
+                      className={`rounded-2xl border-border/50 focus:border-primary/50 ${
+                        form.errors.title ? 'border-destructive' : ''
+                      }`}
                       required
                     />
+                    {form.errors.title && (
+                      <p className="text-sm text-destructive mt-1">{form.errors.title.message}</p>
+                    )}
                   </div>
 
                   {/* Description */}
@@ -223,11 +246,17 @@ const CreateTask = () => {
                       key={`description-${id || 'new'}`}
                       id="description"
                       placeholder={t('taskForm.descriptionPlaceholder')}
-                      value={formData.description}
-                      onChange={(e) => handleInputChange("description", e.target.value)}
-                      className="rounded-2xl border-border/50 focus:border-primary/50 min-h-[100px]"
+                      value={form.values.description}
+                      onChange={(e) => form.setValue('description', e.target.value)}
+                      onBlur={() => form.validateField('description')}
+                      className={`rounded-2xl border-border/50 focus:border-primary/50 min-h-[100px] ${
+                        form.errors.description ? 'border-destructive' : ''
+                      }`}
                       rows={4}
                     />
+                    {form.errors.description && (
+                      <p className="text-sm text-destructive mt-1">{form.errors.description.message}</p>
+                    )}
                   </div>
 
                   {/* Status and Priority */}
@@ -235,8 +264,8 @@ const CreateTask = () => {
                     <div className="space-y-2">
                       <Label className="text-sm font-medium break-words hyphens-auto">{t('taskForm.status')}</Label>
                       <Select 
-                        value={formData.status} 
-                        onValueChange={(value) => handleInputChange("status", value)}
+                        value={form.values.status} 
+                        onValueChange={(value) => form.setValue('status', value as any)}
                       >
                         <SelectTrigger className="rounded-2xl border-border/50">
                           <SelectValue placeholder={t('taskForm.selectStatus')} />
@@ -254,8 +283,8 @@ const CreateTask = () => {
                     <div className="space-y-2">
                       <Label className="text-sm font-medium break-words hyphens-auto">{t('taskForm.priority')}</Label>
                       <Select 
-                        value={formData.priority} 
-                        onValueChange={(value) => handleInputChange("priority", value)}
+                        value={form.values.priority} 
+                        onValueChange={(value) => form.setValue('priority', value as any)}
                       >
                         <SelectTrigger className="rounded-2xl border-border/50">
                           <SelectValue placeholder={t('taskForm.selectPriority')} />
@@ -278,11 +307,18 @@ const CreateTask = () => {
                     </Label>
                     <DateInput
                       id="dueDate"
-                      value={formData.dueDate}
-                      onChange={(value) => handleInputChange("dueDate", value)}
+                      value={form.values.dueDate}
+                      onChange={(value) => {
+                        form.setValue('dueDate', value);
+                        form.validateField('dueDate');
+                      }}
+                      className={form.errors.dueDate ? 'border-destructive' : ''}
                       required
                       placeholder={t('taskForm.selectDate')}
                     />
+                    {form.errors.dueDate && (
+                      <p className="text-sm text-destructive mt-1">{form.errors.dueDate.message}</p>
+                    )}
                   </div>
 
                   {/* Tags */}
@@ -311,9 +347,9 @@ const CreateTask = () => {
                         </Button>
                       </div>
                       
-                      {formData.tags.length > 0 && (
+                      {form.values.tags.length > 0 && (
                         <div className="flex flex-wrap gap-2">
-                          {formData.tags.map((tag) => (
+                          {form.values.tags.map((tag) => (
                             <Badge
                               key={tag}
                               variant="secondary"
@@ -339,11 +375,11 @@ const CreateTask = () => {
                     <Button
                       type="submit"
                       className="flex-1 rounded-2xl h-10 sm:h-12 text-sm sm:text-base font-medium shadow-medium hover:shadow-large transition-all duration-300 px-3"
-                      disabled={isLoading}
+                      disabled={form.isSubmitting || !form.isValid}
                     >
                       <Save className="h-4 w-4 mr-2 flex-shrink-0" />
                       <span className="whitespace-nowrap">
-                        {isLoading 
+                        {form.isSubmitting 
                           ? (isEdit ? t('taskForm.updating') : t('taskForm.creating')) 
                           : (isEdit ? t('taskForm.updateButton') : t('taskForm.createButton'))
                         }

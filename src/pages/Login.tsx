@@ -1,38 +1,46 @@
-import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowLeft, Mail, Lock, AlertCircle } from "lucide-react";
+import { ArrowLeft, Mail, Lock } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useDemoContext } from "@/contexts/DemoContext";
-import { Alert, AlertDescription } from "@/components/ui/alert";
+import { useForm } from "@/hooks/useForm";
+import { ValidationRules } from "@/lib/errors";
+
+interface LoginForm {
+  email: string;
+  password: string;
+}
 
 const Login = () => {
   const { t } = useTranslation();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
   const navigate = useNavigate();
   const { login, isLoading } = useAuth();
   const { setDemoMode } = useDemoContext();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError("");
-    
-    try {
-      const success = await login(email, password);
+  const form = useForm<LoginForm>({
+    initialValues: { email: '', password: '' },
+    validation: {
+      email: {
+        required: true,
+        rules: [ValidationRules.email(t)]
+      },
+      password: {
+        required: true,
+        rules: [ValidationRules.minLength(6, t)]
+      }
+    },
+    onSubmit: async (values) => {
+      const success = await login(values.email, values.password);
       if (success) {
         setDemoMode(false);
         navigate("/dashboard");
       }
-    } catch (err) {
-      setError(t('login.errorMessage'));
     }
-  };
+  });
 
   return (
     <div className="min-h-screen bg-gradient-soft flex items-center justify-center p-6">
@@ -56,13 +64,7 @@ const Login = () => {
           </CardHeader>
           
           <CardContent className="pt-6">
-            {error && (
-              <Alert variant="destructive" className="mb-6">
-                <AlertCircle className="h-4 w-4" />
-                <AlertDescription>{error}</AlertDescription>
-              </Alert>
-            )}
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={form.handleSubmit} className="space-y-6">
               <div className="space-y-2">
                 <Label htmlFor="email" className="text-sm font-medium">{t('login.email')}</Label>
                 <div className="relative">
@@ -71,11 +73,17 @@ const Login = () => {
                     id="email"
                     type="email"
                     placeholder={t('login.emailPlaceholder')}
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="pl-10 rounded-2xl border-border/50 focus:border-primary/50 h-12"
+                    value={form.values.email}
+                    onChange={(e) => form.setValue('email', e.target.value)}
+                    onBlur={() => form.validateField('email')}
+                    className={`pl-10 rounded-2xl border-border/50 focus:border-primary/50 h-12 ${
+                      form.errors.email ? 'border-destructive' : ''
+                    }`}
                     required
                   />
+                  {form.errors.email && (
+                    <p className="text-sm text-destructive mt-1">{form.errors.email.message}</p>
+                  )}
                 </div>
               </div>
 
@@ -87,11 +95,17 @@ const Login = () => {
                     id="password"
                     type="password"
                     placeholder={t('login.passwordPlaceholder')}
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="pl-10 rounded-2xl border-border/50 focus:border-primary/50 h-12"
+                    value={form.values.password}
+                    onChange={(e) => form.setValue('password', e.target.value)}
+                    onBlur={() => form.validateField('password')}
+                    className={`pl-10 rounded-2xl border-border/50 focus:border-primary/50 h-12 ${
+                      form.errors.password ? 'border-destructive' : ''
+                    }`}
                     required
                   />
+                  {form.errors.password && (
+                    <p className="text-sm text-destructive mt-1">{form.errors.password.message}</p>
+                  )}
                 </div>
               </div>
 
@@ -108,9 +122,9 @@ const Login = () => {
               <Button
                 type="submit"
                 className="w-full rounded-2xl h-12 text-base font-medium shadow-medium hover:shadow-large transition-all duration-300"
-                disabled={isLoading}
+                disabled={form.isSubmitting || !form.isValid}
               >
-                <span className="whitespace-nowrap">{isLoading ? t('login.signingIn') : t('login.signIn')}</span>
+                <span className="whitespace-nowrap">{form.isSubmitting ? t('login.signingIn') : t('login.signIn')}</span>
               </Button>
             </form>
 

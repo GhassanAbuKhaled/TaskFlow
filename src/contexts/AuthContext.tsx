@@ -1,8 +1,8 @@
 import { createContext, useContext, useState, useEffect, ReactNode, useMemo } from 'react';
 import { authAPI } from '@/lib/api';
-import { useToast } from '@/components/ui/use-toast';
 import { useTranslation } from 'react-i18next';
-import { parseAPIError, getErrorResponse } from '@/lib/errorHandler';
+import { useErrorHandler } from '@/hooks/useErrorHandler';
+import { AppError } from '@/lib/errors';
 
 interface User {
   id: number;
@@ -33,8 +33,8 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const { toast } = useToast();
   const { t } = useTranslation();
+  const { handleError, showSuccess } = useErrorHandler();
 
 
 
@@ -75,16 +75,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       localStorage.setItem('user', JSON.stringify(user));
       setUser(user);
       
-      toast({
-        title: t('toast.loginSuccess'),
-        description: t('toast.loginWelcome', { username: user.username }),
-      });
+      showSuccess(
+        t('toast.loginSuccess'),
+        t('toast.loginWelcome', { username: user.username })
+      );
       
       return true;
     } catch (error: any) {
-      const parsedError = parseAPIError(error);
-      const errorResponse = getErrorResponse(parsedError, t, 'toast.loginError', 'toast.loginErrorMessage');
-      toast({ title: errorResponse.title, description: errorResponse.message, variant: "destructive" });
+      handleError(error, 'login');
       return false;
     } finally {
       setIsLoading(false);
@@ -97,16 +95,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       const response = await authAPI.register({ username, email, password });
       const { message } = response.data;
       
-      toast({
-        title: t('toast.registerSuccess'),
-        description: message || t('toast.registerMessage'),
-      });
+      showSuccess(
+        t('toast.registerSuccess'),
+        message || t('toast.registerMessage')
+      );
       
       return true;
     } catch (error: any) {
-      const parsedError = parseAPIError(error);
-      const errorResponse = getErrorResponse(parsedError, t, 'toast.registerError', 'toast.registerErrorMessage');
-      toast({ title: errorResponse.title, description: errorResponse.message, variant: "destructive" });
+      handleError(error, 'register');
       return false;
     } finally {
       setIsLoading(false);
@@ -116,10 +112,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const logout = () => {
     localStorage.clear();
     setUser(null);
-    toast({
-      title: t('toast.logoutSuccess'),
-      description: t('toast.logoutMessage'),
-    });
+    showSuccess(
+      t('toast.logoutSuccess'),
+      t('toast.logoutMessage')
+    );
   };
 
   const authValue = useMemo(() => ({

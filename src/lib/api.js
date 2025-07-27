@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { ErrorFactory } from './errors/factory';
 
 const API_URL = 'http://localhost:8080/api';
 
@@ -8,8 +9,10 @@ const api = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
+  timeout: 10000,
 });
 
+// Request interceptor
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('access_token');
@@ -24,11 +27,28 @@ api.interceptors.request.use(
       } else {
         localStorage.clear();
         window.location.href = '/login';
+        return Promise.reject(ErrorFactory.createAuthError('Session expired', true));
       }
     }
     return config;
   },
-  (error) => Promise.reject(error)
+  (error) => Promise.reject(ErrorFactory.fromAxiosError(error))
+);
+
+// Response interceptor
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    const appError = ErrorFactory.fromAxiosError(error);
+    
+    // Handle auth errors globally
+    if (appError.type === 'AUTH' && 'status' in appError && appError.status === 401) {
+      localStorage.clear();
+      window.location.href = '/login';
+    }
+    
+    return Promise.reject(appError);
+  }
 );
 
 export const authAPI = {
