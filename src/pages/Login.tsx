@@ -7,6 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { ArrowLeft, Mail, Lock, AlertCircle } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
+import { useDemoContext } from "@/contexts/DemoContext";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 
 const Login = () => {
@@ -16,6 +17,7 @@ const Login = () => {
   const [error, setError] = useState("");
   const navigate = useNavigate();
   const { login, isLoading } = useAuth();
+  const { setDemoMode } = useDemoContext();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -24,6 +26,7 @@ const Login = () => {
     try {
       const success = await login(email, password);
       if (success) {
+        setDemoMode(false);
         navigate("/dashboard");
       }
     } catch (err) {

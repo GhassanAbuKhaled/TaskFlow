@@ -32,10 +32,7 @@ const Dashboard = () => {
   const { user } = useAuth();
   const { isDemoMode } = useDemoContext();
   
-  // Fetch tasks when component mounts
-  useEffect(() => {
-    fetchTasks();
-  }, [fetchTasks]);
+
 
   const stats = {
     total: tasks.length,

@@ -236,9 +236,7 @@ const Tasks = () => {
   const [priorityFilter, setPriorityFilter] = useState<string>("all");
   const [sortBy, setSortBy] = useState<string>("dueDate");
   
-  useEffect(() => {
-    fetchTasks();
-  }, [fetchTasks]);
+
 
   const filteredTasks = useMemo(() => {
     return tasks
