@@ -12,21 +12,21 @@
     "menu": "Menü"
   },
   "welcome": {
-    "title": "Schönes Aufgaben",
-    "subtitle": "Management",
-    "description": "Organisieren Sie Ihr Leben mit Eleganz. Eine angenehme Aufgabenverwaltung, die Produktivität mühelos erscheinen lässt.",
+    "title": "Schöne Aufgaben",
+    "subtitle": "Verwaltung",
+    "description": "Organisieren Sie Ihr Leben mit Eleganz. Eine wunderbare Aufgabenverwaltung, die Produktivität mühelos macht.",
     "getStarted": "Loslegen",
     "viewDemo": "Demo ansehen",
     "features": {
-      "title": "Alles, was Sie brauchen, um organisiert zu bleiben",
-      "subtitle": "Mit Liebe zum Detail gestaltet, bietet Ihnen TaskFlow die perfekte Balance zwischen Funktionalität und Schönheit.",
+      "title": "Alles was Sie brauchen, um organisiert zu bleiben",
+      "subtitle": "Mit Liebe und Aufmerksamkeit für Details entworfen, bringt Ihnen TaskFlow die perfekte Balance zwischen Funktionalität und Schönheit.",
       "taskManagement": {
         "title": "Aufgabenverwaltung",
         "description": "Organisieren Sie Ihre Aufgaben mit Leichtigkeit und verfolgen Sie Ihren Fortschritt"
       },
       "deadlineTracking": {
-        "title": "Terminverfolgung",
-        "description": "Verpassen Sie nie wieder eine Frist mit unserem intelligenten Erinnerungssystem"
+        "title": "Fristenüberwachung",
+        "description": "Verpassen Sie nie eine Frist mit unserem intelligenten Erinnerungssystem"
       },
       "smartTags": {
         "title": "Intelligente Tags",
@@ -201,40 +201,6 @@
     "logoutMessage": "Sie wurden erfolgreich abgemeldet.",
     "parseUserDataError": "Gespeicherte Benutzerdaten konnten nicht verarbeitet werden",
     "authProviderError": "useAuth muss innerhalb eines AuthProviders verwendet werden",
-    "demoMode": "Demo-Modus"
-  },
-  "common": {
-    "delete": "Löschen",
-    "cancel": "Abbrechen",
-    "confirm": "Bestätigen"
-  },
-  "toast": {
-    "error": "Fehler",
-    "loadTasksError": "Aufgaben konnten nicht geladen werden. Bitte versuchen Sie es erneut.",
-    "createTaskSuccess": "Aufgabe erstellt",
-    "createTaskMessage": "Ihre Aufgabe wurde erfolgreich erstellt.",
-    "createTaskError": "Aufgabe konnte nicht erstellt werden. Bitte versuchen Sie es erneut.",
-    "updateTaskSuccess": "Aufgabe aktualisiert",
-    "updateTaskMessage": "Ihre Aufgabe wurde erfolgreich aktualisiert.",
-    "updateTaskError": "Aufgabe konnte nicht aktualisiert werden. Bitte versuchen Sie es erneut.",
-    "deleteTaskSuccess": "Aufgabe gelöscht",
-    "deleteTaskMessage": "Die Aufgabe wurde erfolgreich gelöscht.",
-    "deleteTaskError": "Aufgabe konnte nicht gelöscht werden. Bitte versuchen Sie es erneut.",
-    "updateStatusSuccess": "Aufgabe aktualisiert",
-    "updateStatusMessage": "Aufgabenstatus wurde aktualisiert.",
-    "updateStatusError": "Aufgabenstatus konnte nicht aktualisiert werden. Bitte versuchen Sie es erneut.",
-    "loginSuccess": "Anmeldung erfolgreich",
-    "loginWelcome": "Willkommen zurück, {{username}}!",
-    "loginError": "Anmeldung fehlgeschlagen",
-    "loginErrorMessage": "Ein unerwarteter Fehler ist bei der Anmeldung aufgetreten. Bitte versuchen Sie es erneut.",
-    "registerSuccess": "Registrierung erfolgreich",
-    "registerMessage": "Ihr Konto wurde erstellt. Bitte melden Sie sich an.",
-    "registerError": "Registrierung fehlgeschlagen",
-    "registerErrorMessage": "Registrierung fehlgeschlagen. Bitte versuchen Sie es erneut.",
-    "logoutSuccess": "Abgemeldet",
-    "logoutMessage": "Sie wurden erfolgreich abgemeldet.",
-    "parseUserDataError": "Gespeicherte Benutzerdaten konnten nicht verarbeitet werden",
-    "authProviderError": "useAuth muss innerhalb eines AuthProviders verwendet werden",
     "demoMode": "Demo-Modus",
     "demoTaskCreated": "Aufgabe im Demo-Modus erstellt. Erstellen Sie ein Konto, um Ihre Daten zu speichern!",
     "demoTaskUpdated": "Aufgabe im Demo-Modus aktualisiert. Änderungen bleiben nicht erhalten, wenn Sie die Seite verlassen.",
@@ -255,5 +221,61 @@
     "emailExistsMessage": "Ein Konto mit dieser E-Mail existiert bereits. Bitte verwenden Sie eine andere E-Mail.",
     "validationError": "Validierungsfehler",
     "validationErrorMessage": "Bitte überprüfen Sie Ihre Eingabe und versuchen Sie es erneut."
+  },
+  "common": {
+    "delete": "Löschen",
+    "cancel": "Abbrechen",
+    "confirm": "Bestätigen"
+  },
+  "errors": {
+    "badRequest": "Ungültige Anfrage",
+    "badRequestMessage": "Die Anfrage konnte nicht verarbeitet werden. Bitte überprüfen Sie Ihre Eingabe.",
+    "unauthorized": "Nicht autorisiert",
+    "unauthorizedMessage": "Sie müssen sich anmelden, um auf diese Ressource zuzugreifen.",
+    "forbidden": "Zugriff verweigert",
+    "forbiddenMessage": "Sie haben keine Berechtigung, auf diese Ressource zuzugreifen.",
+    "notFound": "Nicht gefunden",
+    "notFoundMessage": "Die angeforderte Ressource konnte nicht gefunden werden.",
+    "conflict": "Konflikt",
+    "conflictMessage": "Es gab einen Konflikt mit Ihrer Anfrage. Bitte versuchen Sie es erneut.",
+    "validation": "Validierungsfehler",
+    "validationMessage": "Bitte überprüfen Sie Ihre Eingabe und versuchen Sie es erneut.",
+    "tooManyRequests": "Zu viele Anfragen",
+    "tooManyRequestsMessage": "Sie stellen zu viele Anfragen. Bitte warten Sie und versuchen Sie es erneut.",
+    "serverError": "Serverfehler",
+    "serverErrorMessage": "Auf unserer Seite ist etwas schief gelaufen. Bitte versuchen Sie es später erneut.",
+    "networkError": "Netzwerkfehler",
+    "networkErrorMessage": "Verbindung zum Server nicht möglich. Bitte überprüfen Sie Ihre Verbindung.",
+    "offline": "Sie sind offline",
+    "offlineMessage": "Bitte überprüfen Sie Ihre Internetverbindung und versuchen Sie es erneut.",
+    "authError": "Authentifizierungsfehler",
+    "authErrorMessage": "Es gab ein Problem mit Ihrer Authentifizierung. Bitte melden Sie sich erneut an.",
+    "sessionExpired": "Sitzung abgelaufen",
+    "sessionExpiredMessage": "Ihre Sitzung ist abgelaufen. Bitte melden Sie sich erneut an.",
+    "validationError": "Validierungsfehler",
+    "validationErrorMessage": "Bitte überprüfen Sie Ihre Eingabe und versuchen Sie es erneut.",
+    "unknown": "Unbekannter Fehler",
+    "unknownMessage": "Ein unerwarteter Fehler ist aufgetreten. Bitte versuchen Sie es erneut.",
+    "somethingWentWrong": "Etwas ist schief gelaufen",
+    "unexpectedError": "Ein unerwarteter Fehler ist aufgetreten. Wir arbeiten daran, dieses Problem zu beheben.",
+    "tryAgain": "Erneut versuchen",
+    "goHome": "Zur Startseite",
+    "retry": "Wiederholen"
+  },
+  "validation": {
+    "required": "{{field}} ist erforderlich",
+    "invalidEmail": "Bitte geben Sie eine gültige E-Mail-Adresse ein",
+    "minLength": "{{field}} muss mindestens {{min}} Zeichen lang sein",
+    "maxLength": "{{field}} darf höchstens {{max}} Zeichen lang sein",
+    "invalidPassword": "Passwort muss mindestens 8 Zeichen mit Groß-, Kleinbuchstaben und Zahl enthalten",
+    "futureDateRequired": "Bitte wählen Sie ein zukünftiges Datum"
+  },
+  "fields": {
+    "email": "E-Mail",
+    "password": "Passwort",
+    "title": "Titel",
+    "description": "Beschreibung",
+    "dueDate": "Fälligkeitsdatum",
+    "username": "Benutzername"
   }
 }
