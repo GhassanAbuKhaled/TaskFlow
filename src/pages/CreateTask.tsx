@@ -131,7 +131,7 @@ const CreateTask = () => {
 
   const addTag = useCallback(() => {
     const trimmedTag = newTag.trim();
-    if (trimmedTag && !form.values.tags.includes(trimmedTag)) {
+    if (trimmedTag && trimmedTag.length <= 20 && !form.values.tags.includes(trimmedTag)) {
       form.setValue('tags', [...form.values.tags, trimmedTag]);
       setNewTag("");
     }
@@ -335,6 +335,7 @@ const CreateTask = () => {
                           value={newTag}
                           onChange={(e) => setNewTag(e.target.value)}
                           onKeyPress={handleKeyPress}
+                          maxLength={20}
                           className="rounded-2xl border-border/50 focus:border-primary/50"
                         />
                         <Button
