@@ -308,10 +308,7 @@ const CreateTask = () => {
                     <DateInput
                       id="dueDate"
                       value={form.values.dueDate}
-                      onChange={(value) => {
-                        form.setValue('dueDate', value);
-                        form.validateField('dueDate');
-                      }}
+                      onChange={(value) => form.setValue('dueDate', value)}
                       className={form.errors.dueDate ? 'border-destructive' : ''}
                       required
                       placeholder={t('taskForm.selectDate')}
