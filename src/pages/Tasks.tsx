@@ -58,9 +58,9 @@ const TaskFilters = ({
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">{t('tasks.allStatus')}</SelectItem>
-            <SelectItem value="todo">{t('status.todo')}</SelectItem>
-            <SelectItem value="in-progress">{t('status.inProgress')}</SelectItem>
-            <SelectItem value="completed">{t('status.completed')}</SelectItem>
+            <SelectItem value="TODO">{t('status.todo')}</SelectItem>
+            <SelectItem value="IN_PROGRESS">{t('status.inProgress')}</SelectItem>
+            <SelectItem value="COMPLETED">{t('status.completed')}</SelectItem>
           </SelectContent>
         </Select>
 
@@ -71,9 +71,9 @@ const TaskFilters = ({
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">{t('tasks.allPriority')}</SelectItem>
-            <SelectItem value="high">{t('priority.high')}</SelectItem>
-            <SelectItem value="medium">{t('priority.medium')}</SelectItem>
-            <SelectItem value="low">{t('priority.low')}</SelectItem>
+            <SelectItem value="HIGH">{t('priority.high')}</SelectItem>
+            <SelectItem value="MEDIUM">{t('priority.medium')}</SelectItem>
+            <SelectItem value="LOW">{t('priority.low')}</SelectItem>
           </SelectContent>
         </Select>
 
@@ -110,13 +110,13 @@ const StatusOverview = ({ tasks }: StatusOverviewProps) => {
         Total: {tasks.length}
       </Badge>
       <Badge variant="outline" className="px-3 py-2 rounded-full text-muted-foreground">
-        {t('status.todo')}: {getStatusCount("todo")}
+        {t('status.todo')}: {getStatusCount("TODO")}
       </Badge>
       <Badge variant="outline" className="px-3 py-2 rounded-full text-warning">
-        {t('status.inProgress')}: {getStatusCount("in-progress")}
+        {t('status.inProgress')}: {getStatusCount("IN_PROGRESS")}
       </Badge>
       <Badge variant="outline" className="px-3 py-2 rounded-full text-success">
-        {t('status.completed')}: {getStatusCount("completed")}
+        {t('status.completed')}: {getStatusCount("COMPLETED")}
       </Badge>
     </div>
   );
@@ -227,9 +227,9 @@ const Tasks = () => {
   const { user } = useAuth();
   
   // Calculate task statistics for meta description
-  const todoCount = tasks.filter(task => task.status === "todo").length;
-  const inProgressCount = tasks.filter(task => task.status === "in-progress").length;
-  const completedCount = tasks.filter(task => task.status === "completed").length;
+  const todoCount = tasks.filter(task => task.status === "TODO").length;
+  const inProgressCount = tasks.filter(task => task.status === "IN_PROGRESS").length;
+  const completedCount = tasks.filter(task => task.status === "COMPLETED").length;
   
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
@@ -249,7 +249,7 @@ const Tasks = () => {
         return matchesSearch && matchesStatus && matchesPriority;
       })
       .sort((a, b) => {
-        const priorityOrder = { high: 3, medium: 2, low: 1 };
+        const priorityOrder = { HIGH: 3, MEDIUM: 2, LOW: 1 };
         
         switch (sortBy) {
           case "dueDate":

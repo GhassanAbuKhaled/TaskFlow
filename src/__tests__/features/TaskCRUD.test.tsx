@@ -4,8 +4,8 @@ const mockTask = {
   id: '1',
   title: 'Test Task',
   description: 'Test Description',
-  status: 'todo' as const,
-  priority: 'high' as const,
+  status: 'TODO' as const,
+  priority: 'HIGH' as const,
   dueDate: '2024-12-31',
   tags: ['work'],
   createdAt: '2024-01-01',
@@ -69,7 +69,7 @@ describe('Task CRUD Operations', () => {
   });
 
   it('should handle different task statuses', () => {
-    const statuses = ['todo', 'in-progress', 'completed'];
+    const statuses = ['TODO', 'IN_PROGRESS', 'COMPLETED'];
     
     statuses.forEach(status => {
       const taskWithStatus = { ...mockTask, status };
@@ -79,7 +79,7 @@ describe('Task CRUD Operations', () => {
   });
 
   it('should handle different task priorities', () => {
-    const priorities = ['low', 'medium', 'high'];
+    const priorities = ['LOW', 'MEDIUM', 'HIGH'];
     
     priorities.forEach(priority => {
       const taskWithPriority = { ...mockTask, priority };

@@ -6,8 +6,8 @@ const mockTasks = [
     id: '1',
     title: 'High Priority Task',
     description: 'Important task',
-    status: 'todo' as const,
-    priority: 'high' as const,
+    status: 'TODO' as const,
+    priority: 'HIGH' as const,
     dueDate: '2024-12-31',
     tags: ['work'],
     createdAt: '2024-01-01',
@@ -16,8 +16,8 @@ const mockTasks = [
     id: '2',
     title: 'Medium Priority Task',
     description: 'Regular task',
-    status: 'in-progress' as const,
-    priority: 'medium' as const,
+    status: 'IN_PROGRESS' as const,
+    priority: 'MEDIUM' as const,
     dueDate: '2024-12-30',
     tags: ['personal'],
     createdAt: '2024-01-02',
@@ -26,8 +26,8 @@ const mockTasks = [
     id: '3',
     title: 'Low Priority Task',
     description: 'Simple task',
-    status: 'completed' as const,
-    priority: 'low' as const,
+    status: 'COMPLETED' as const,
+    priority: 'LOW' as const,
     dueDate: '2024-12-29',
     tags: ['hobby'],
     createdAt: '2024-01-03',
@@ -52,7 +52,7 @@ const filterTasks = (
 };
 
 const sortTasks = (tasks: typeof mockTasks, sortBy: string) => {
-  const priorityOrder = { high: 3, medium: 2, low: 1 };
+  const priorityOrder = { HIGH: 3, MEDIUM: 2, LOW: 1 };
   
   return [...tasks].sort((a, b) => {
     switch (sortBy) {
@@ -76,39 +76,39 @@ describe('Task Filters', () => {
   });
 
   it('filters tasks by status', () => {
-    const todoTasks = filterTasks(mockTasks, '', 'todo', 'all');
+    const todoTasks = filterTasks(mockTasks, '', 'TODO', 'all');
     expect(todoTasks).toHaveLength(1);
-    expect(todoTasks[0].status).toBe('todo');
+    expect(todoTasks[0].status).toBe('TODO');
 
-    const inProgressTasks = filterTasks(mockTasks, '', 'in-progress', 'all');
+    const inProgressTasks = filterTasks(mockTasks, '', 'IN_PROGRESS', 'all');
     expect(inProgressTasks).toHaveLength(1);
-    expect(inProgressTasks[0].status).toBe('in-progress');
+    expect(inProgressTasks[0].status).toBe('IN_PROGRESS');
 
-    const completedTasks = filterTasks(mockTasks, '', 'completed', 'all');
+    const completedTasks = filterTasks(mockTasks, '', 'COMPLETED', 'all');
     expect(completedTasks).toHaveLength(1);
-    expect(completedTasks[0].status).toBe('completed');
+    expect(completedTasks[0].status).toBe('COMPLETED');
   });
 
   it('filters tasks by priority', () => {
-    const highPriorityTasks = filterTasks(mockTasks, '', 'all', 'high');
+    const highPriorityTasks = filterTasks(mockTasks, '', 'all', 'HIGH');
     expect(highPriorityTasks).toHaveLength(1);
-    expect(highPriorityTasks[0].priority).toBe('high');
+    expect(highPriorityTasks[0].priority).toBe('HIGH');
 
-    const mediumPriorityTasks = filterTasks(mockTasks, '', 'all', 'medium');
+    const mediumPriorityTasks = filterTasks(mockTasks, '', 'all', 'MEDIUM');
     expect(mediumPriorityTasks).toHaveLength(1);
-    expect(mediumPriorityTasks[0].priority).toBe('medium');
+    expect(mediumPriorityTasks[0].priority).toBe('MEDIUM');
 
-    const lowPriorityTasks = filterTasks(mockTasks, '', 'all', 'low');
+    const lowPriorityTasks = filterTasks(mockTasks, '', 'all', 'LOW');
     expect(lowPriorityTasks).toHaveLength(1);
-    expect(lowPriorityTasks[0].priority).toBe('low');
+    expect(lowPriorityTasks[0].priority).toBe('LOW');
   });
 
   it('combines multiple filters', () => {
-    const filtered = filterTasks(mockTasks, 'task', 'todo', 'high');
+    const filtered = filterTasks(mockTasks, 'task', 'TODO', 'HIGH');
     expect(filtered).toHaveLength(1);
     expect(filtered[0].title).toBe('High Priority Task');
-    expect(filtered[0].status).toBe('todo');
-    expect(filtered[0].priority).toBe('high');
+    expect(filtered[0].status).toBe('TODO');
+    expect(filtered[0].priority).toBe('HIGH');
   });
 
   it('returns empty array when no matches', () => {
@@ -125,15 +125,15 @@ describe('Task Filters', () => {
 
   it('sorts tasks by priority', () => {
     const sorted = sortTasks(mockTasks, 'priority');
-    expect(sorted[0].priority).toBe('high');
-    expect(sorted[1].priority).toBe('medium');
-    expect(sorted[2].priority).toBe('low');
+    expect(sorted[0].priority).toBe('HIGH');
+    expect(sorted[1].priority).toBe('MEDIUM');
+    expect(sorted[2].priority).toBe('LOW');
   });
 
   it('sorts tasks by status', () => {
     const sorted = sortTasks(mockTasks, 'status');
-    expect(sorted[0].status).toBe('completed');
-    expect(sorted[1].status).toBe('in-progress');
-    expect(sorted[2].status).toBe('todo');
+    expect(sorted[0].status).toBe('COMPLETED');
+    expect(sorted[1].status).toBe('IN_PROGRESS');
+    expect(sorted[2].status).toBe('TODO');
   });
 });

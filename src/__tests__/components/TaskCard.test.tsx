@@ -10,8 +10,8 @@ const mockTask: Task = {
   id: '1',
   title: 'Test Task',
   description: 'Test Description',
-  status: 'todo',
-  priority: 'high',
+  status: 'TODO',
+  priority: 'HIGH',
   dueDate: '2024-12-31',
   tags: ['work', 'urgent'],
   createdAt: '2024-01-01',
@@ -77,9 +77,9 @@ describe('TaskCard Component', () => {
   });
 
   it('handles different task statuses', () => {
-    const todoTask = { ...mockTask, status: 'todo' as const };
-    const inProgressTask = { ...mockTask, status: 'in-progress' as const };
-    const completedTask = { ...mockTask, status: 'completed' as const };
+    const todoTask = { ...mockTask, status: 'TODO' as const };
+    const inProgressTask = { ...mockTask, status: 'IN_PROGRESS' as const };
+    const completedTask = { ...mockTask, status: 'COMPLETED' as const };
 
     // Test todo status
     const { rerender } = renderWithProviders(
@@ -116,9 +116,9 @@ describe('TaskCard Component', () => {
   });
 
   it('handles different priority levels', () => {
-    const highPriorityTask = { ...mockTask, priority: 'high' as const };
-    const mediumPriorityTask = { ...mockTask, priority: 'medium' as const };
-    const lowPriorityTask = { ...mockTask, priority: 'low' as const };
+    const highPriorityTask = { ...mockTask, priority: 'HIGH' as const };
+    const mediumPriorityTask = { ...mockTask, priority: 'MEDIUM' as const };
+    const lowPriorityTask = { ...mockTask, priority: 'LOW' as const };
 
     // Test each priority level
     [highPriorityTask, mediumPriorityTask, lowPriorityTask].forEach(task => {

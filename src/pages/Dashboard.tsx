@@ -36,9 +36,9 @@ const Dashboard = () => {
 
   const stats = {
     total: tasks.length,
-    completed: tasks.filter(t => t.status === "completed").length,
-    inProgress: tasks.filter(t => t.status === "in-progress").length,
-    overdue: tasks.filter(t => new Date(t.dueDate) < new Date() && t.status !== "completed").length
+    completed: tasks.filter(t => t.status === "COMPLETED").length,
+    inProgress: tasks.filter(t => t.status === "IN_PROGRESS").length,
+    overdue: tasks.filter(t => new Date(t.dueDate) < new Date() && t.status !== "COMPLETED").length
   };
 
   const recentTasks = tasks.slice(0, 3);

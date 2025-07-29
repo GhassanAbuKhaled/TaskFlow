@@ -10,8 +10,8 @@ const defaultDemoTasks: Task[] = [
     id: "demo-1",
     title: "Try adding a new task",
     description: "Click the 'New Task' button to create your first task in demo mode.",
-    status: "todo",
-    priority: "medium",
+    status: "TODO",
+    priority: "MEDIUM",
     dueDate: new Date(Date.now() + 86400000).toISOString().split('T')[0], // Tomorrow
     createdAt: new Date().toISOString(),
     tags: ["demo", "getting-started"]
@@ -20,8 +20,8 @@ const defaultDemoTasks: Task[] = [
     id: "demo-2",
     title: "Explore task management features",
     description: "Try changing task status, priority, and other properties to see how the app works.",
-    status: "in-progress",
-    priority: "high",
+    status: "IN_PROGRESS",
+    priority: "HIGH",
     dueDate: new Date(Date.now() + 172800000).toISOString().split('T')[0], // Day after tomorrow
     createdAt: new Date().toISOString(),
     tags: ["demo", "features"]
@@ -30,8 +30,8 @@ const defaultDemoTasks: Task[] = [
     id: "demo-3",
     title: "Create an account to save your data",
     description: "Sign up to keep your tasks and preferences saved across sessions.",
-    status: "completed",
-    priority: "low",
+    status: "COMPLETED",
+    priority: "LOW",
     dueDate: new Date().toISOString().split('T')[0], // Today
     createdAt: new Date(Date.now() - 86400000).toISOString(),
     tags: ["demo", "account"]
@@ -40,8 +40,8 @@ const defaultDemoTasks: Task[] = [
     id: "demo-4",
     title: "Prepare project presentation",
     description: "Create slides and talking points for the quarterly review meeting.",
-    status: "todo",
-    priority: "high",
+    status: "TODO",
+    priority: "HIGH",
     dueDate: new Date(Date.now() + 259200000).toISOString().split('T')[0], // 3 days from now
     createdAt: new Date().toISOString(),
     tags: ["work", "presentation"]
@@ -50,8 +50,8 @@ const defaultDemoTasks: Task[] = [
     id: "demo-5",
     title: "Research new productivity tools",
     description: "Find and evaluate new tools that could improve team workflow and efficiency.",
-    status: "in-progress",
-    priority: "medium",
+    status: "IN_PROGRESS",
+    priority: "MEDIUM",
     dueDate: new Date(Date.now() + 432000000).toISOString().split('T')[0], // 5 days from now
     createdAt: new Date(Date.now() - 172800000).toISOString(), // 2 days ago
     tags: ["research", "productivity"]
@@ -109,7 +109,7 @@ export const DemoProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const toggleDemoTaskStatus = (taskId: string) => {
-    const statusMap: Record<string, Task['status']> = { "todo": "in-progress", "in-progress": "completed", "completed": "todo" };
+    const statusMap: Record<string, Task['status']> = { "TODO": "IN_PROGRESS", "IN_PROGRESS": "COMPLETED", "COMPLETED": "TODO" };
     
     setDemoTasks(prev => prev.map(task => 
       task.id === taskId 
