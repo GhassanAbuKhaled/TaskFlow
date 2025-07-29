@@ -53,9 +53,11 @@ export class ErrorHandler {
     const errorKey = this.getErrorKey(error);
     const mapping = ERROR_MESSAGES[errorKey] || ERROR_MESSAGES.UNKNOWN;
     
-    // Use server message for validation errors if available
-    const message = error.type === ErrorType.VALIDATION && 'details' in error && error.details?.serverMessage
+    // Use server message for validation errors or auth errors with specific messages
+    const message = (error.type === ErrorType.VALIDATION && 'details' in error && error.details?.serverMessage)
       ? error.details.serverMessage
+      : (error.type === ErrorType.AUTH && error.message && !('isTokenExpired' in error && error.isTokenExpired))
+      ? error.message
       : t(mapping.messageKey, { context });
 
     return {

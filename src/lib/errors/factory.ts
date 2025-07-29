@@ -19,9 +19,10 @@ export class ErrorFactory {
     const errorData = data as any;
     
     if (status === 401 || status === 403) {
+      const isTokenExpired = status === 401 && this.isTokenExpirationError(config?.url, errorData);
       return this.createAuthError(
         errorData?.message || 'Authentication failed',
-        status === 401
+        isTokenExpired
       );
     }
 
@@ -100,5 +101,21 @@ export class ErrorFactory {
       message,
       timestamp: new Date()
     };
+  }
+
+  private static isTokenExpirationError(url?: string, errorData?: any): boolean {
+    // Authentication endpoints should not be treated as token expiration
+    const authEndpoints = ['/auth/login', '/auth/register', '/auth/refresh'];
+    const isAuthEndpoint = authEndpoints.some(endpoint => url?.includes(endpoint));
+    
+    if (isAuthEndpoint) {
+      return false;
+    }
+
+    // Check for specific token expiration indicators
+    const tokenExpiredMessages = ['token expired', 'jwt expired', 'session expired'];
+    const message = errorData?.message?.toLowerCase() || '';
+    
+    return tokenExpiredMessages.some(indicator => message.includes(indicator));
   }
 }
