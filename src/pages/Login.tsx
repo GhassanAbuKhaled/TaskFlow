@@ -68,7 +68,7 @@ const Login = () => {
               <div className="space-y-2">
                 <Label htmlFor="email" className="text-sm font-medium">{t('login.email')}</Label>
                 <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
                   <Input
                     id="email"
                     type="email"
@@ -81,16 +81,16 @@ const Login = () => {
                     }`}
                     required
                   />
-                  {form.errors.email && (
-                    <p className="text-sm text-destructive mt-1">{form.errors.email.message}</p>
-                  )}
                 </div>
+                {form.errors.email && (
+                  <p className="text-sm text-destructive mt-1">{form.errors.email.message}</p>
+                )}
               </div>
 
               <div className="space-y-2">
                 <Label htmlFor="password" className="text-sm font-medium">{t('login.password')}</Label>
                 <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
                   <Input
                     id="password"
                     type="password"
@@ -103,10 +103,10 @@ const Login = () => {
                     }`}
                     required
                   />
-                  {form.errors.password && (
-                    <p className="text-sm text-destructive mt-1">{form.errors.password.message}</p>
-                  )}
                 </div>
+                {form.errors.password && (
+                  <p className="text-sm text-destructive mt-1">{form.errors.password.message}</p>
+                )}
               </div>
 
               {/* <div className="flex items-center justify-between text-sm">
