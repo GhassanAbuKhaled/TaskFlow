@@ -43,6 +43,22 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
+// Public route component that redirects authenticated users
+const PublicRoute = ({ children }: { children: React.ReactNode }) => {
+  const { isAuthenticated, isLoading } = useAuth();
+  
+  if (isLoading) {
+    return <div className="flex h-screen items-center justify-center">Loading...</div>;
+  }
+  
+  // Redirect authenticated users to dashboard
+  if (isAuthenticated) {
+    return <Navigate to="/dashboard" replace />;
+  }
+  
+  return <>{children}</>;
+};
+
 const App = () => (
   <ErrorBoundary>
     <div className="overflow-x-hidden w-full">
@@ -55,10 +71,26 @@ const App = () => (
                 <Sonner />
                 <BrowserRouter>
                   <Routes>
-                    <Route path="/" element={<Welcome />} />
-                    <Route path="/login" element={<Login />} />
-                    <Route path="/register" element={<Register />} />
-                    <Route path="/demo" element={<DemoActivator />} />
+                    <Route path="/" element={
+                      <PublicRoute>
+                        <Welcome />
+                      </PublicRoute>
+                    } />
+                    <Route path="/login" element={
+                      <PublicRoute>
+                        <Login />
+                      </PublicRoute>
+                    } />
+                    <Route path="/register" element={
+                      <PublicRoute>
+                        <Register />
+                      </PublicRoute>
+                    } />
+                    <Route path="/demo" element={
+                      <PublicRoute>
+                        <DemoActivator />
+                      </PublicRoute>
+                    } />
                     <Route path="/dashboard" element={
                       <ProtectedRoute>
                         <Dashboard />
