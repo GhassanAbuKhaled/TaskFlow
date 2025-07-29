@@ -78,7 +78,7 @@ const TaskCard = ({ task, onEdit, onDelete, onToggleStatus }: TaskCardProps) => 
     "COMPLETED": "text-success"
   };
 
-  const StatusIcon = statusIcons[task.status];
+  const StatusIcon = statusIcons[task.status] || Circle;
   const isOverdue = new Date(task.dueDate) < new Date() && task.status !== "COMPLETED";
 
   return (
