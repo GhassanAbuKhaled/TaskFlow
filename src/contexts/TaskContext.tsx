@@ -6,7 +6,7 @@ import { useDemoContext } from "./DemoContext";
 import { useTranslation } from "react-i18next";
 import { useErrorHandler } from "@/hooks/useErrorHandler";
 import { AppError } from "@/lib/errors";
-import { transformServerTask, transformClientTask, transformStatus } from "@/lib/taskTransformers";
+
 
 interface TaskContextType {
   tasks: Task[];
@@ -66,7 +66,11 @@ export const TaskProvider = ({ children }: TaskProviderProps) => {
     
     try {
       const response = await tasksAPI.getAllTasks();
-      const transformedTasks = response.data.map(transformServerTask);
+      const transformedTasks = response.data.map((task: any) => ({
+        ...task,
+        dueDate: task.dueDate.split('T')[0],
+        tags: task.tags || []
+      }));
       setTasks(transformedTasks);
     } catch (error: any) {
       setError(error.message);
@@ -86,10 +90,18 @@ export const TaskProvider = ({ children }: TaskProviderProps) => {
     setError(null);
     
     try {
-      const serverTaskData = transformClientTask(taskData);
+      const serverTaskData = {
+        ...taskData,
+        dueDate: `${taskData.dueDate}T17:00:00`,
+        tags: taskData.tags || []
+      };
       const response = await tasksAPI.createTask(serverTaskData);
       
-      const transformedTask = transformServerTask(response.data);
+      const transformedTask = {
+        ...response.data,
+        dueDate: response.data.dueDate.split('T')[0],
+        tags: response.data.tags || []
+      };
       setTasks((prevTasks) => [...prevTasks, transformedTask]);
       
       showSuccess(
@@ -114,7 +126,11 @@ export const TaskProvider = ({ children }: TaskProviderProps) => {
     setError(null);
     
     try {
-      const serverTaskData = transformClientTask(updatedTask);
+      const serverTaskData = {
+        ...updatedTask,
+        dueDate: `${updatedTask.dueDate}T17:00:00`,
+        tags: updatedTask.tags || []
+      };
       await tasksAPI.updateTask(updatedTask.id, serverTaskData);
       
       setTasks((prevTasks) =>
@@ -172,15 +188,14 @@ export const TaskProvider = ({ children }: TaskProviderProps) => {
     if (!task) return;
     
     const nextStatus =
-      task.status === "todo"
-        ? "in-progress"
-        : task.status === "in-progress"
-        ? "completed"
-        : "todo";
+      task.status === "TODO"
+        ? "IN_PROGRESS"
+        : task.status === "IN_PROGRESS"
+        ? "COMPLETED"
+        : "TODO";
     
     try {
-      const serverStatus = transformStatus(nextStatus);
-      await tasksAPI.updateTaskStatus(taskId, serverStatus);
+      await tasksAPI.updateTaskStatus(taskId, nextStatus);
       
       setTasks((prevTasks) =>
         prevTasks.map((task) => {

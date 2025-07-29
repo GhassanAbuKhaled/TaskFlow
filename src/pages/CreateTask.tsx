@@ -22,8 +22,8 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 interface TaskForm {
   title: string;
   description: string;
-  status: "todo" | "in-progress" | "completed";
-  priority: "low" | "medium" | "high";
+  status: "TODO" | "IN_PROGRESS" | "COMPLETED";
+  priority: "LOW" | "MEDIUM" | "HIGH";
   dueDate: string;
   tags: string[];
 }
@@ -44,8 +44,8 @@ const CreateTask = () => {
     initialValues: {
       title: "",
       description: "",
-      status: "todo",
-      priority: "medium",
+      status: "TODO",
+      priority: "MEDIUM",
       dueDate: "",
       tags: []
     },
@@ -156,15 +156,15 @@ const CreateTask = () => {
   }), [isEdit, t, form.values.title]);
 
   const statusOptions = useMemo(() => [
-    { value: "todo", label: t('status.todo') },
-    { value: "in-progress", label: t('status.inProgress') },
-    { value: "completed", label: t('status.completed') }
+    { value: "TODO", label: t('status.todo') },
+    { value: "IN_PROGRESS", label: t('status.inProgress') },
+    { value: "COMPLETED", label: t('status.completed') }
   ], [t]);
 
   const priorityOptions = useMemo(() => [
-    { value: "low", label: t('priority.low') },
-    { value: "medium", label: t('priority.medium') },
-    { value: "high", label: t('priority.high') }
+    { value: "LOW", label: t('priority.low') },
+    { value: "MEDIUM", label: t('priority.medium') },
+    { value: "HIGH", label: t('priority.high') }
   ], [t]);
 
   return (

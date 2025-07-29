@@ -21,8 +21,8 @@ export interface Task {
   id: string;
   title: string;
   description: string;
-  status: "todo" | "in-progress" | "completed";
-  priority: "low" | "medium" | "high";
+  status: "TODO" | "IN_PROGRESS" | "COMPLETED";
+  priority: "LOW" | "MEDIUM" | "HIGH";
   dueDate: string;
   createdAt: string;
   tags?: string[];
@@ -61,25 +61,25 @@ const TaskCard = ({ task, onEdit, onDelete, onToggleStatus }: TaskCardProps) => 
   };
   
   const priorityColors = {
-    low: "bg-success/10 text-success border-success/20",
-    medium: "bg-warning/10 text-warning border-warning/20",
-    high: "bg-destructive/10 text-destructive border-destructive/20"
+    LOW: "bg-success/10 text-success border-success/20",
+    MEDIUM: "bg-warning/10 text-warning border-warning/20",
+    HIGH: "bg-destructive/10 text-destructive border-destructive/20"
   };
 
   const statusIcons = {
-    "todo": Circle,
-    "in-progress": Clock,
-    "completed": CheckCircle2
+    "TODO": Circle,
+    "IN_PROGRESS": Clock,
+    "COMPLETED": CheckCircle2
   };
 
   const statusColors = {
-    "todo": "text-muted-foreground",
-    "in-progress": "text-warning",
-    "completed": "text-success"
+    "TODO": "text-muted-foreground",
+    "IN_PROGRESS": "text-warning",
+    "COMPLETED": "text-success"
   };
 
   const StatusIcon = statusIcons[task.status];
-  const isOverdue = new Date(task.dueDate) < new Date() && task.status !== "completed";
+  const isOverdue = new Date(task.dueDate) < new Date() && task.status !== "COMPLETED";
 
   return (
     <div 
@@ -105,7 +105,7 @@ const TaskCard = ({ task, onEdit, onDelete, onToggleStatus }: TaskCardProps) => 
               <div>
                 <h3 className={cn(
                   "font-semibold text-foreground text-sm sm:text-base line-clamp-1 max-w-[150px] sm:max-w-[180px] md:max-w-full",
-                  task.status === "completed" && "line-through text-muted-foreground"
+                  task.status === "COMPLETED" && "line-through text-muted-foreground"
                 )}>
                   {task.title}
                 </h3>
@@ -113,7 +113,7 @@ const TaskCard = ({ task, onEdit, onDelete, onToggleStatus }: TaskCardProps) => 
                   variant="outline" 
                   className={cn("text-xs mt-1", priorityColors[task.priority])}
                 >
-                  {t(`taskCard.${task.priority}Priority`)}
+                  {t(`taskCard.${task.priority.toLowerCase()}Priority`)}
                 </Badge>
               </div>
             </div>
