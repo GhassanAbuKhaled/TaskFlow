@@ -14,8 +14,8 @@ const createMockTask = (id: number) => ({
   id: id.toString(),
   title: `Task ${id}`,
   description: `Description for task ${id}`,
-  status: 'todo' as const,
-  priority: 'medium' as const,
+  status: 'TODO' as const,
+  priority: 'MEDIUM' as const,
   dueDate: '2024-12-31',
   tags: ['test'],
   createdAt: '2024-01-01',
@@ -91,7 +91,7 @@ describe('Performance Tests', () => {
     const startTime = performance.now();
     
     // Update task status
-    const updatedTask = { ...task, status: 'completed' as const };
+    const updatedTask = { ...task, status: 'COMPLETED' as const };
     
     rerender(
       <TestWrapper>

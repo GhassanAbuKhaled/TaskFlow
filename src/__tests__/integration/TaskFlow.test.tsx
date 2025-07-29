@@ -9,8 +9,8 @@ const mockTask = {
   id: '1',
   title: 'Test Task',
   description: 'Test Description',
-  status: 'todo' as const,
-  priority: 'high' as const,
+  status: 'TODO' as const,
+  priority: 'HIGH' as const,
   dueDate: '2024-12-31',
   tags: ['work'],
   createdAt: '2024-01-01',
@@ -56,7 +56,7 @@ describe('Task Management Integration Flow', () => {
   });
 
   it('should handle task status transitions', () => {
-    const statuses = ['todo', 'in-progress', 'completed'] as const;
+    const statuses = ['TODO', 'IN_PROGRESS', 'COMPLETED'] as const;
     
     statuses.forEach(status => {
       const taskWithStatus = { ...mockTask, status };
@@ -77,7 +77,7 @@ describe('Task Management Integration Flow', () => {
   });
 
   it('should handle different task priorities', () => {
-    const priorities = ['low', 'medium', 'high'] as const;
+    const priorities = ['LOW', 'MEDIUM', 'HIGH'] as const;
     
     priorities.forEach(priority => {
       const taskWithPriority = { ...mockTask, priority };
