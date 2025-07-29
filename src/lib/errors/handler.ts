@@ -1,5 +1,6 @@
 import { TFunction } from 'i18next';
 import { AppError, ErrorType, ErrorResponse } from './types';
+import { ERROR_CONFIG } from './config';
 
 const ERROR_MESSAGES: Record<string, { titleKey: string; messageKey: string; action?: string }> = {
   // API Errors
@@ -53,12 +54,7 @@ export class ErrorHandler {
     const errorKey = this.getErrorKey(error);
     const mapping = ERROR_MESSAGES[errorKey] || ERROR_MESSAGES.UNKNOWN;
     
-    // Use server message for validation errors or auth errors with specific messages
-    const message = (error.type === ErrorType.VALIDATION && 'details' in error && error.details?.serverMessage)
-      ? error.details.serverMessage
-      : (error.type === ErrorType.AUTH && error.message && !('isTokenExpired' in error && error.isTokenExpired))
-      ? error.message
-      : t(mapping.messageKey, { context });
+    const message = this.getErrorMessage(error, mapping, t, context);
 
     return {
       title: t(mapping.titleKey),
@@ -66,6 +62,28 @@ export class ErrorHandler {
       action: mapping.action,
       retry: mapping.action === 'retry'
     };
+  }
+
+  private static getErrorMessage(
+    error: AppError, 
+    mapping: any, 
+    t: TFunction, 
+    context?: string
+  ): string {
+    // Validation errors with server message
+    if (error.type === ErrorType.VALIDATION && 'details' in error && error.details?.serverMessage) {
+      return error.details.serverMessage;
+    }
+    
+    // Auth errors (non-expired) with specific message
+    if (error.type === ErrorType.AUTH && 
+        error.message && 
+        !('isTokenExpired' in error && error.isTokenExpired)) {
+      return error.message;
+    }
+    
+    // Default translated message
+    return t(mapping.messageKey, { context });
   }
 
   static shouldRetry(error: AppError): boolean {
@@ -77,7 +95,8 @@ export class ErrorHandler {
   }
 
   static getRetryDelay(attempt: number): number {
-    return Math.min(1000 * Math.pow(2, attempt), 10000);
+    const { BASE_DELAY, MAX_DELAY } = ERROR_CONFIG.RETRY;
+    return Math.min(BASE_DELAY * Math.pow(2, attempt), MAX_DELAY);
   }
 
   static logError(error: AppError, context?: string): void {

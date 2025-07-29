@@ -1,6 +1,10 @@
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import { AppError, ErrorNotificationService } from '@/lib/errors';
+import { AppError, ErrorNotificationService, ErrorFactory, ErrorType, ErrorSeverity } from '@/lib/errors';
+
+function isAppError(error: any): error is AppError {
+  return error && typeof error === 'object' && 'type' in error && 'severity' in error;
+}
 
 export function useErrorHandler() {
   const { t } = useTranslation();
@@ -10,18 +14,9 @@ export function useErrorHandler() {
     context?: string,
     retryCallback?: () => Promise<void>
   ) => {
-    let appError: AppError;
-    
-    if (error instanceof Error && !('type' in error)) {
-      appError = {
-        type: 'UNKNOWN' as any,
-        severity: 'MEDIUM' as any,
-        message: error.message,
-        timestamp: new Date()
-      };
-    } else {
-      appError = error as AppError;
-    }
+    const appError = isAppError(error) 
+      ? error 
+      : ErrorFactory.createGenericError(error.message || 'Unknown error', ErrorType.UNKNOWN);
 
     ErrorNotificationService.showError(appError, t, context, retryCallback);
   }, [t]);

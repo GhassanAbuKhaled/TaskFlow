@@ -8,6 +8,7 @@ import {
   ErrorType, 
   ErrorSeverity 
 } from './types';
+import { ERROR_CONFIG } from './config';
 
 export class ErrorFactory {
   static fromAxiosError(error: AxiosError): AppError {
@@ -104,18 +105,15 @@ export class ErrorFactory {
   }
 
   private static isTokenExpirationError(url?: string, errorData?: any): boolean {
-    // Authentication endpoints should not be treated as token expiration
-    const authEndpoints = ['/auth/login', '/auth/register', '/auth/refresh'];
-    const isAuthEndpoint = authEndpoints.some(endpoint => url?.includes(endpoint));
+    const { AUTH_ENDPOINTS, TOKEN_EXPIRED_INDICATORS } = ERROR_CONFIG;
     
-    if (isAuthEndpoint) {
+    // Authentication endpoints should not be treated as token expiration
+    if (AUTH_ENDPOINTS.some(endpoint => url?.includes(endpoint))) {
       return false;
     }
 
     // Check for specific token expiration indicators
-    const tokenExpiredMessages = ['token expired', 'jwt expired', 'session expired'];
     const message = errorData?.message?.toLowerCase() || '';
-    
-    return tokenExpiredMessages.some(indicator => message.includes(indicator));
+    return TOKEN_EXPIRED_INDICATORS.some(indicator => message.includes(indicator));
   }
 }
