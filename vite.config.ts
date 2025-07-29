@@ -8,13 +8,13 @@ export default defineConfig(({ mode }) => ({
   base: "/",
   server: {
     host: "::",
-    port: 8080,
+    port: 3000,
   },
   define: {
     'process.env.VITE_APP_URL': JSON.stringify(
       mode === 'production' 
         ? 'https://taskflow.ghassanabukhaled.com' 
-        : 'http://localhost:8080'
+        : 'http://localhost:3000'
     )
   },
   plugins: [
