@@ -26,10 +26,6 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const { isAuthenticated, isLoading } = useAuth();
   const { isDemoMode } = useDemoContext();
   
-  if (isLoading) {
-    return <div className="flex h-screen items-center justify-center">Loading...</div>;
-  }
-  
   // Allow access if authenticated or in demo mode
   if (!isAuthenticated && !isDemoMode) {
     return <Navigate to="/login" replace />;
@@ -46,10 +42,6 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
 // Public route component that redirects authenticated users
 const PublicRoute = ({ children }: { children: React.ReactNode }) => {
   const { isAuthenticated, isLoading } = useAuth();
-  
-  if (isLoading) {
-    return <div className="flex h-screen items-center justify-center">Loading...</div>;
-  }
   
   // Redirect authenticated users to dashboard
   if (isAuthenticated) {

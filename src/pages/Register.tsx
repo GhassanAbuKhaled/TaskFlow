@@ -85,7 +85,7 @@ const Register = () => {
               <div className="space-y-2">
                 <Label htmlFor="name" className="text-sm font-medium">{t('register.fullName')}</Label>
                 <div className="relative">
-                  <User className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <User className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
                   <Input
                     id="name"
                     type="text"
@@ -99,16 +99,16 @@ const Register = () => {
                     }`}
                     required
                   />
-                  {form.errors.name && (
-                    <p className="text-sm text-destructive mt-1">{form.errors.name.message}</p>
-                  )}
                 </div>
+                {form.errors.name && (
+                  <p className="text-sm text-destructive mt-1">{form.errors.name.message}</p>
+                )}
               </div>
 
               <div className="space-y-2">
                 <Label htmlFor="email" className="text-sm font-medium">{t('register.email')}</Label>
                 <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
                   <Input
                     id="email"
                     type="email"
@@ -122,16 +122,16 @@ const Register = () => {
                     }`}
                     required
                   />
-                  {form.errors.email && (
-                    <p className="text-sm text-destructive mt-1">{form.errors.email.message}</p>
-                  )}
                 </div>
+                {form.errors.email && (
+                  <p className="text-sm text-destructive mt-1">{form.errors.email.message}</p>
+                )}
               </div>
 
               <div className="space-y-2">
                 <Label htmlFor="password" className="text-sm font-medium">{t('register.password')}</Label>
                 <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
                   <Input
                     id="password"
                     type="password"
@@ -144,16 +144,16 @@ const Register = () => {
                     }`}
                     required
                   />
-                  {form.errors.password && (
-                    <p className="text-sm text-destructive mt-1">{form.errors.password.message}</p>
-                  )}
                 </div>
+                {form.errors.password && (
+                  <p className="text-sm text-destructive mt-1">{form.errors.password.message}</p>
+                )}
               </div>
 
               <div className="space-y-2">
                 <Label htmlFor="confirmPassword" className="text-sm font-medium">{t('register.confirmPassword')}</Label>
                 <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
                   <Input
                     id="confirmPassword"
                     type="password"
@@ -166,10 +166,10 @@ const Register = () => {
                     }`}
                     required
                   />
-                  {form.errors.confirmPassword && (
-                    <p className="text-sm text-destructive mt-1">{form.errors.confirmPassword.message}</p>
-                  )}
                 </div>
+                {form.errors.confirmPassword && (
+                  <p className="text-sm text-destructive mt-1">{form.errors.confirmPassword.message}</p>
+                )}
               </div>
 
               <div className="text-xs text-muted-foreground">
