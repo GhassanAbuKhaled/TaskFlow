@@ -1,7 +1,7 @@
 import axios, { AxiosResponse } from 'axios';
 import { ErrorFactory } from './errors/factory';
 
-const API_URL = 'http://ec2-3-88-129-154.compute-1.amazonaws.com:8080/api';
+const API_URL = 'https://api.taskflow.ghassanabukhaled.com/api';
 
 interface LoginCredentials {
   email: string;
