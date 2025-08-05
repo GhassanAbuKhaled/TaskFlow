@@ -70,16 +70,22 @@ export class ErrorHandler {
     t: TFunction, 
     context?: string
   ): string {
-    // Validation errors with server message
-    if (error.type === ErrorType.VALIDATION && 'details' in error && error.details?.serverMessage) {
-      return error.details.serverMessage;
-    }
-    
-    // Auth errors (non-expired) with specific message
-    if (error.type === ErrorType.AUTH && 
-        error.message && 
-        !('isTokenExpired' in error && error.isTokenExpired)) {
-      return error.message;
+    // Use server message if available and meaningful
+    if (error.message && error.message !== 'API request failed') {
+      // For validation errors with server message
+      if (error.type === ErrorType.VALIDATION && 'details' in error && error.details?.serverMessage) {
+        return error.details.serverMessage;
+      }
+      
+      // For auth errors (non-expired) with specific message
+      if (error.type === ErrorType.AUTH && !('isTokenExpired' in error && error.isTokenExpired)) {
+        return error.message;
+      }
+      
+      // For API errors with specific server messages
+      if (error.type === ErrorType.API) {
+        return error.message;
+      }
     }
     
     // Default translated message
