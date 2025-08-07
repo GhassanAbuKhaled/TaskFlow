@@ -1,7 +1,7 @@
 import axios, { AxiosResponse } from 'axios';
 import { ErrorFactory } from './errors/factory';
 
-const API_URL = 'http://localhost:8080/api';
+const API_URL = import.meta.env.VITE_API_URL || 'https://api.taskflow.ghassanabukhaled.com/api';
 
 interface LoginCredentials {
   email: string;
