@@ -28,7 +28,7 @@ const ThemeToggle = () => {
       variant="ghost"
       size="icon"
       onClick={toggleTheme}
-      className="rounded-xl transition-colors duration-300 hover:bg-muted/60 relative overflow-hidden group border border-border/50"
+      className="rounded-xl hover:bg-muted/60 relative overflow-hidden group border border-border/50"
       aria-label={`Switch to ${isDark ? 'light' : 'dark'} mode`}
     >
       <div className="relative w-5 h-5 flex items-center justify-center">
@@ -38,7 +38,7 @@ const ThemeToggle = () => {
             scale: isDark ? 0 : 1,
             opacity: isDark ? 0 : 1
           }}
-          transition={{ duration: 0.3, ease: "easeInOut" }}
+          transition={{ duration: 0.15, ease: "easeInOut" }}
           className="absolute"
         >
           <Sun className="h-5 w-5 text-primary" />
@@ -50,7 +50,7 @@ const ThemeToggle = () => {
             scale: isDark ? 1 : 0,
             opacity: isDark ? 1 : 0
           }}
-          transition={{ duration: 0.3, ease: "easeInOut" }}
+          transition={{ duration: 0.15, ease: "easeInOut" }}
           className="absolute"
         >
           <Moon className="h-5 w-5 text-primary" />
