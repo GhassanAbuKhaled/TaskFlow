@@ -181,9 +181,6 @@ export const TaskProvider = ({ children }: TaskProviderProps) => {
       return;
     }
     
-    setIsLoading(true);
-    setError(null);
-    
     const task = tasks.find(t => t.id === taskId);
     if (!task) return;
     
@@ -194,27 +191,35 @@ export const TaskProvider = ({ children }: TaskProviderProps) => {
         ? "COMPLETED"
         : "TODO";
     
+    // Update UI immediately for better UX
+    setTasks((prevTasks) =>
+      prevTasks.map((task) => {
+        if (task.id === taskId) {
+          return { ...task, status: nextStatus };
+        }
+        return task;
+      })
+    );
+    
     try {
       await tasksAPI.updateTaskStatus(taskId, nextStatus);
-      
-      setTasks((prevTasks) =>
-        prevTasks.map((task) => {
-          if (task.id === taskId) {
-            return { ...task, status: nextStatus };
-          }
-          return task;
-        })
-      );
       
       showSuccess(
         t('toast.updateStatusSuccess'),
         t('toast.updateStatusMessage')
       );
     } catch (error: any) {
+      // Revert the change if API call fails
+      setTasks((prevTasks) =>
+        prevTasks.map((task) => {
+          if (task.id === taskId) {
+            return { ...task, status: task.status };
+          }
+          return task;
+        })
+      );
       setError(error.message);
       handleError(error, 'updateTaskStatus');
-    } finally {
-      setIsLoading(false);
     }
   };
 
