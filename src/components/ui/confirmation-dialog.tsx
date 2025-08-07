@@ -32,7 +32,7 @@ export function ConfirmationDialog({
 }: ConfirmationDialogProps) {
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
-      <AlertDialogContent className="sm:max-w-[425px] mx-4 left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+      <AlertDialogContent className="sm:max-w-[425px]">
         <AlertDialogHeader>
           <AlertDialogTitle className="text-lg">{title}</AlertDialogTitle>
           <AlertDialogDescription className="text-sm">{description}</AlertDialogDescription>

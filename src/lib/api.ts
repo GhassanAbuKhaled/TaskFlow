@@ -1,7 +1,7 @@
 import axios, { AxiosResponse } from 'axios';
 import { ErrorFactory } from './errors/factory';
 
-const API_URL = 'https://api.taskflow.ghassanabukhaled.com/api';
+const API_URL = 'http://localhost:8080/api';
 
 interface LoginCredentials {
   email: string;
