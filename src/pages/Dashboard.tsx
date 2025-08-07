@@ -9,7 +9,7 @@ import Sidebar from "@/components/Sidebar";
 import TaskCard from "@/components/TaskCard";
 import Spinner from "@/components/ui/spinner";
 import SEO from "@/components/SEO";
-import Footer from "@/components/Footer";
+
 import { useTaskContext } from "@/contexts/TaskContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { useDemoContext } from "@/contexts/DemoContext";
@@ -267,7 +267,6 @@ const Dashboard = () => {
           </div>
         </main>
       </div>
-      <Footer />
     </div>
   );
 };

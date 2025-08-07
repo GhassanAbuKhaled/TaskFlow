@@ -11,6 +11,7 @@ import { useDemoContext } from "./contexts/DemoContext";
 import { ErrorBoundary } from "./lib/errors";
 import DemoBanner from "./components/DemoBanner";
 import DemoActivator from "./components/DemoActivator";
+import Layout from "./components/Layout";
 import Welcome from "./pages/Welcome";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
@@ -85,25 +86,37 @@ const App = () => (
                     } />
                     <Route path="/dashboard" element={
                       <ProtectedRoute>
-                        <Dashboard />
+                        <Layout>
+                          <Dashboard />
+                        </Layout>
                       </ProtectedRoute>
                     } />
                     <Route path="/tasks" element={
                       <ProtectedRoute>
-                        <Tasks />
+                        <Layout>
+                          <Tasks />
+                        </Layout>
                       </ProtectedRoute>
                     } />
                     <Route path="/create-task" element={
                       <ProtectedRoute>
-                        <CreateTask />
+                        <Layout>
+                          <CreateTask />
+                        </Layout>
                       </ProtectedRoute>
                     } />
                     <Route path="/edit-task/:id" element={
                       <ProtectedRoute>
-                        <CreateTask />
+                        <Layout>
+                          <CreateTask />
+                        </Layout>
                       </ProtectedRoute>
                     } />
-                    <Route path="*" element={<NotFound />} />
+                    <Route path="*" element={
+                      <Layout showFooter={false}>
+                        <NotFound />
+                      </Layout>
+                    } />
                   </Routes>
                 </BrowserRouter>
               </TooltipProvider>
