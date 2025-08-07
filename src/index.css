@@ -124,12 +124,20 @@
 
 @layer base {
   * {
-    @apply border-border transition-colors duration-300;
+    @apply border-border;
   }
 
   body {
     @apply bg-background text-foreground font-inter antialiased;
-    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+  
+  /* Fast theme switching */
+  html {
+    transition: none !important;
+  }
+  
+  html.dark {
+    transition: none !important;
   }
   
   /* Prevent text shifting during theme changes */
