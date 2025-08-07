@@ -9,6 +9,7 @@ import Sidebar from "@/components/Sidebar";
 import TaskCard from "@/components/TaskCard";
 import Spinner from "@/components/ui/spinner";
 import SEO from "@/components/SEO";
+import Footer from "@/components/Footer";
 import { useTaskContext } from "@/contexts/TaskContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { useDemoContext } from "@/contexts/DemoContext";
@@ -91,13 +92,13 @@ const Dashboard = () => {
               <>
                 {/* Welcome Section */}
                 <div className="space-y-2">
-                  <h1 className="text-responsive-2xl font-bold text-foreground">
+                  <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-foreground">
                     {isDemoMode 
                       ? t('dashboard.welcomeDemo')
                       : t('dashboard.welcome', { username: user?.username || 'User' })
                     }
                   </h1>
-                  <p className="text-responsive-base text-muted-foreground">
+                  <p className="text-sm sm:text-base text-muted-foreground">
                     {isDemoMode
                       ? t('dashboard.subtitleDemo')
                       : t('dashboard.subtitle')
@@ -106,23 +107,24 @@ const Dashboard = () => {
                 </div>
 
                 {/* Stats Cards */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 dashboard-stats-grid">
+                <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6 dashboard-stats-grid items-stretch">
                   <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.3, delay: 0.1 }}
                     whileHover={{ y: -4, transition: { duration: 0.2 } }}
+                    className="h-full"
                   >
-                    <Card className="rounded-2xl border-border/50 shadow-soft hover:shadow-medium transition-all duration-300">
-                      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 stat-card-header h-auto min-h-[40px]">
-                        <CardTitle className="text-xs md:text-sm font-medium text-muted-foreground break-words hyphens-auto">
+                    <Card className="rounded-2xl border-border/50 shadow-soft hover:shadow-medium transition-all duration-300 h-full flex flex-col">
+                      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1 px-3 pt-3">
+                        <CardTitle className="text-xs font-medium text-muted-foreground">
                           {t('dashboard.stats.total')}
                         </CardTitle>
                         <TrendingUp className="h-3 w-3 md:h-4 md:w-4 text-primary" />
                       </CardHeader>
-                      <CardContent>
-                        <div className="text-lg md:text-2xl font-bold text-foreground stat-card-value">{stats.total}</div>
-                        <p className="text-xs text-success mt-1 break-words hyphens-auto">
+                      <CardContent className="px-3 pb-3 flex-1 flex flex-col justify-between">
+                        <div className="text-lg sm:text-xl font-bold text-foreground">{stats.total}</div>
+                        <p className="text-xs text-success mt-0.5">
                           {t('dashboard.stats.fromYesterday')}
                         </p>
                       </CardContent>
@@ -134,17 +136,18 @@ const Dashboard = () => {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.3, delay: 0.2 }}
                     whileHover={{ y: -4, transition: { duration: 0.2 } }}
+                    className="h-full"
                   >
-                    <Card className="rounded-2xl border-border/50 shadow-soft hover:shadow-medium transition-all duration-300">
-                      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 h-auto min-h-[40px]">
-                        <CardTitle className="text-xs md:text-sm font-medium text-muted-foreground break-words hyphens-auto">
+                    <Card className="rounded-2xl border-border/50 shadow-soft hover:shadow-medium transition-all duration-300 h-full flex flex-col">
+                      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1 px-3 pt-3">
+                        <CardTitle className="text-xs font-medium text-muted-foreground">
                           {t('dashboard.stats.completed')}
                         </CardTitle>
-                        <CheckCircle2 className="h-4 w-4 text-success" />
+                        <CheckCircle2 className="h-3 w-3 md:h-4 md:w-4 text-success" />
                       </CardHeader>
-                      <CardContent>
-                        <div className="text-2xl font-bold text-foreground">{stats.completed}</div>
-                        <p className="text-xs text-success mt-1 break-words hyphens-auto">
+                      <CardContent className="px-3 pb-3 flex-1 flex flex-col justify-between">
+                        <div className="text-lg sm:text-xl font-bold text-foreground">{stats.completed}</div>
+                        <p className="text-xs text-success mt-0.5">
                           {t('dashboard.stats.greatProgress')}
                         </p>
                       </CardContent>
@@ -156,17 +159,18 @@ const Dashboard = () => {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.3, delay: 0.3 }}
                     whileHover={{ y: -4, transition: { duration: 0.2 } }}
+                    className="h-full"
                   >
-                    <Card className="rounded-2xl border-border/50 shadow-soft hover:shadow-medium transition-all duration-300">
-                      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 h-auto min-h-[40px]">
-                        <CardTitle className="text-xs md:text-sm font-medium text-muted-foreground break-words hyphens-auto">
+                    <Card className="rounded-2xl border-border/50 shadow-soft hover:shadow-medium transition-all duration-300 h-full flex flex-col">
+                      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1 px-3 pt-3">
+                        <CardTitle className="text-xs font-medium text-muted-foreground">
                           {t('dashboard.stats.inProgress')}
                         </CardTitle>
-                        <Clock className="h-4 w-4 text-warning" />
+                        <Clock className="h-3 w-3 md:h-4 md:w-4 text-warning" />
                       </CardHeader>
-                      <CardContent>
-                        <div className="text-2xl font-bold text-foreground">{stats.inProgress}</div>
-                        <p className="text-xs text-warning mt-1 break-words hyphens-auto">
+                      <CardContent className="px-3 pb-3 flex-1 flex flex-col justify-between">
+                        <div className="text-lg sm:text-xl font-bold text-foreground">{stats.inProgress}</div>
+                        <p className="text-xs text-warning mt-0.5">
                           {t('dashboard.stats.keepItUp')}
                         </p>
                       </CardContent>
@@ -178,17 +182,18 @@ const Dashboard = () => {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.3, delay: 0.4 }}
                     whileHover={{ y: -4, transition: { duration: 0.2 } }}
+                    className="h-full"
                   >
-                    <Card className="rounded-2xl border-border/50 shadow-soft hover:shadow-medium transition-all duration-300">
-                      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 h-auto min-h-[40px]">
-                        <CardTitle className="text-xs md:text-sm font-medium text-muted-foreground break-words hyphens-auto">
+                    <Card className="rounded-2xl border-border/50 shadow-soft hover:shadow-medium transition-all duration-300 h-full flex flex-col">
+                      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1 px-3 pt-3">
+                        <CardTitle className="text-xs font-medium text-muted-foreground">
                           {t('dashboard.stats.overdue')}
                         </CardTitle>
-                        <AlertTriangle className="h-4 w-4 text-destructive" />
+                        <AlertTriangle className="h-3 w-3 md:h-4 md:w-4 text-destructive" />
                       </CardHeader>
-                      <CardContent>
-                        <div className="text-2xl font-bold text-foreground">{stats.overdue}</div>
-                        <p className="text-xs text-destructive mt-1 break-words hyphens-auto">
+                      <CardContent className="px-3 pb-3 flex-1 flex flex-col justify-between">
+                        <div className="text-lg sm:text-xl font-bold text-foreground">{stats.overdue}</div>
+                        <p className="text-xs text-destructive mt-0.5">
                           {stats.overdue > 0 ? t('dashboard.stats.needsAttention') : t('dashboard.stats.allCaughtUp')}
                         </p>
                       </CardContent>
@@ -262,6 +267,7 @@ const Dashboard = () => {
           </div>
         </main>
       </div>
+      <Footer />
     </div>
   );
 };
