@@ -26,7 +26,7 @@ export default defineConfig(({ mode }) => ({
     },
   },
   build: {
-    minify: 'terser',
+    minify: true,
     cssMinify: true,
     rollupOptions: {
       output: {
