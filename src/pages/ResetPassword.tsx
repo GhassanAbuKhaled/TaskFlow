@@ -8,7 +8,6 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { ArrowLeft, Lock, CheckCircle } from "lucide-react";
 import SEO from "@/components/SEO";
 import { authAPI } from "@/lib/api";
-import { authAPI } from "@/lib/api";
 
 const ResetPassword = () => {
   const [searchParams] = useSearchParams();
