@@ -109,15 +109,14 @@ const Login = () => {
                 )}
               </div>
 
-              {/* <div className="flex items-center justify-between text-sm">
-                <label className="flex items-center">
-                  <input type="checkbox" className="mr-2 rounded" />
-                  Remember me
-                </label>
-                <a href="#" className="text-primary hover:underline">
-                  Forgot password?
-                </a>
-              </div> */}
+              <div className="flex items-center justify-end text-sm">
+                <Link 
+                  to="/forgot-password" 
+                  className="text-primary hover:text-primary/80 transition-colors font-medium"
+                >
+                  {t('login.forgotPassword')}
+                </Link>
+              </div>
 
               <Button
                 type="submit"

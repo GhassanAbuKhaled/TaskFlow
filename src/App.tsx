@@ -15,6 +15,7 @@ import Layout from "./components/Layout";
 import Welcome from "./pages/Welcome";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import ForgotPassword from "./pages/ForgotPassword";
 import Dashboard from "./pages/Dashboard";
 import Tasks from "./pages/Tasks";
 import CreateTask from "./pages/CreateTask";
@@ -82,6 +83,11 @@ const App = () => (
                     <Route path="/demo" element={
                       <PublicRoute>
                         <DemoActivator />
+                      </PublicRoute>
+                    } />
+                    <Route path="/forgot-password" element={
+                      <PublicRoute>
+                        <ForgotPassword />
                       </PublicRoute>
                     } />
                     <Route path="/dashboard" element={
