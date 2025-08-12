@@ -23,6 +23,10 @@ interface ResetPasswordData {
   password: string;
 }
 
+interface VerifyTokenData {
+  token: string;
+}
+
 const api = axios.create({
   baseURL: API_URL,
   headers: {
@@ -72,6 +76,7 @@ export const authAPI = {
   register: (userData: RegisterData): Promise<AxiosResponse> => api.post('/auth/register', userData),
   forgotPassword: (data: ForgotPasswordData): Promise<AxiosResponse> => api.post('/auth/forgot-password', data),
   resetPassword: (data: ResetPasswordData): Promise<AxiosResponse> => api.post('/auth/reset-password', data),
+  verifyResetToken: (data: VerifyTokenData): Promise<AxiosResponse> => api.post('/auth/verify-reset-token', data),
 };
 
 export const tasksAPI = {

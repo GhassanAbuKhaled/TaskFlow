@@ -8,6 +8,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { ArrowLeft, Lock, CheckCircle } from "lucide-react";
 import SEO from "@/components/SEO";
 import { authAPI } from "@/lib/api";
+import { authAPI } from "@/lib/api";
 
 const ResetPassword = () => {
   const [searchParams] = useSearchParams();
@@ -18,14 +19,35 @@ const ResetPassword = () => {
   const [isSuccess, setIsSuccess] = useState(false);
   const [error, setError] = useState("");
   const [token, setToken] = useState("");
+  const [isVerifyingToken, setIsVerifyingToken] = useState(true);
 
   useEffect(() => {
     const tokenParam = searchParams.get("token");
     if (!tokenParam) {
       setError("Invalid or missing reset token. Please request a new password reset.");
+      setIsVerifyingToken(false);
       return;
     }
-    setToken(tokenParam);
+    
+    // Verify token with API
+    const verifyToken = async () => {
+      try {
+        await authAPI.verifyResetToken({ token: tokenParam });
+        setToken(tokenParam);
+      } catch (err: any) {
+        if (err?.status === 400) {
+          setError("Invalid or expired reset token. Please request a new password reset.");
+        } else if (err?.status === 404) {
+          setError("Reset token not found. Please request a new password reset.");
+        } else {
+          setError("Unable to verify reset token. Please try again.");
+        }
+      } finally {
+        setIsVerifyingToken(false);
+      }
+    };
+    
+    verifyToken();
   }, [searchParams]);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -46,15 +68,7 @@ const ResetPassword = () => {
     }
 
     try {
-      // Simulate API call with realistic delay
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      // Simulate token validation
-      if (token === 'invalid' || token === 'expired') {
-        throw new Error('Invalid or expired reset token. Please request a new password reset.');
-      }
-      
-      // Success case
+      await authAPI.resetPassword({ token, password });
       setIsSuccess(true);
       
       // Redirect to login after 3 seconds
@@ -62,11 +76,39 @@ const ResetPassword = () => {
         navigate("/login");
       }, 3000);
     } catch (err: any) {
-      setError(err.message || "Failed to reset password. Please try again.");
+      if (err?.status === 400) {
+        setError("Invalid or expired reset token. Please request a new password reset.");
+      } else if (err?.status === 422) {
+        setError("Password does not meet requirements. Please try a stronger password.");
+      } else if (err?.status === 429) {
+        setError("Too many attempts. Please try again later.");
+      } else {
+        setError("Failed to reset password. Please try again.");
+      }
     } finally {
       setIsLoading(false);
     }
   };
+
+  // Show loading while verifying token
+  if (isVerifyingToken) {
+    return (
+      <div className="min-h-screen bg-gradient-soft flex items-center justify-center p-4">
+        <SEO 
+          title="Verifying Reset Token - TaskFlow"
+          description="Verifying your password reset token."
+        />
+        <Card className="w-full max-w-md">
+          <CardContent className="pt-6">
+            <div className="text-center space-y-4">
+              <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto"></div>
+              <p className="text-muted-foreground">Verifying reset token...</p>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   if (isSuccess) {
     return (
