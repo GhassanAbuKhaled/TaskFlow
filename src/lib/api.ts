@@ -14,6 +14,15 @@ interface RegisterData {
   password: string;
 }
 
+interface ForgotPasswordData {
+  email: string;
+}
+
+interface ResetPasswordData {
+  token: string;
+  password: string;
+}
+
 const api = axios.create({
   baseURL: API_URL,
   headers: {
@@ -61,6 +70,8 @@ api.interceptors.response.use(
 export const authAPI = {
   login: (credentials: LoginCredentials): Promise<AxiosResponse> => api.post('/auth/login', credentials),
   register: (userData: RegisterData): Promise<AxiosResponse> => api.post('/auth/register', userData),
+  forgotPassword: (data: ForgotPasswordData): Promise<AxiosResponse> => api.post('/auth/forgot-password', data),
+  resetPassword: (data: ResetPasswordData): Promise<AxiosResponse> => api.post('/auth/reset-password', data),
 };
 
 export const tasksAPI = {

@@ -20,13 +20,20 @@ const ForgotPassword = () => {
     setError("");
 
     try {
-      // Simulate API call for password reset
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      // Import authAPI dynamically to avoid circular imports
+      const { authAPI } = await import("@/lib/api");
       
-      // For demo purposes, always show success
+      await authAPI.forgotPassword({ email });
       setIsSuccess(true);
-    } catch (err) {
-      setError("Failed to send reset email. Please try again.");
+    } catch (err: any) {
+      // Handle different error scenarios
+      if (err?.status === 404) {
+        setError("No account found with this email address.");
+      } else if (err?.status === 429) {
+        setError("Too many requests. Please try again later.");
+      } else {
+        setError("Failed to send reset email. Please try again.");
+      }
     } finally {
       setIsLoading(false);
     }
