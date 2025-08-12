@@ -142,7 +142,8 @@
     "signIn": "Anmelden",
     "signingIn": "Anmeldung...",
     "noAccount": "Noch kein Konto?",
-    "signUp": "Registrieren"
+    "signUp": "Registrieren",
+    "forgotPassword": "Passwort vergessen?"
   },
   "register": {
     "backToHome": "Zurück zur Startseite",
