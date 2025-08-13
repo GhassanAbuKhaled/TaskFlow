@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import { I18nextProvider } from 'react-i18next';
-import i18n from '@/i18n';
+import i18n from '@/test/setup';
 import { DemoProvider, useDemoContext } from '@/contexts/DemoContext';
 import { ReactNode } from 'react';
 
@@ -41,21 +41,25 @@ describe('DemoContext', () => {
     
     if (result.current && result.current.isDemoMode !== undefined) {
       expect(typeof result.current.isDemoMode).toBe('boolean');
-      expect(typeof result.current.enableDemoMode).toBe('function');
-      expect(typeof result.current.disableDemoMode).toBe('function');
+      expect(typeof result.current.setDemoMode).toBe('function');
+      expect(typeof result.current.addDemoTask).toBe('function');
+      expect(typeof result.current.updateDemoTask).toBe('function');
+      expect(typeof result.current.deleteDemoTask).toBe('function');
+      expect(typeof result.current.toggleDemoTaskStatus).toBe('function');
+      expect(Array.isArray(result.current.demoTasks)).toBe(true);
     }
   });
 
   it('should handle demo mode toggle when available', () => {
     const { result } = renderHook(() => useDemoContext(), { wrapper });
     
-    if (result.current && result.current.enableDemoMode) {
+    if (result.current && result.current.setDemoMode) {
       act(() => {
-        result.current.enableDemoMode();
+        result.current.setDemoMode(true);
       });
       
       if (result.current.isDemoMode !== undefined) {
-        expect(typeof result.current.isDemoMode).toBe('boolean');
+        expect(result.current.isDemoMode).toBe(true);
       }
     }
   });

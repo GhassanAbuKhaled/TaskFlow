@@ -72,11 +72,11 @@ describe('Login Page', () => {
   });
 
   it('renders basic page elements', () => {
-    renderWithProviders(<Login />);
+    const { container } = renderWithProviders(<Login />);
     
-    // Try to find any text content
-    const pageContent = screen.queryByText(/./); // Any text
-    expect(pageContent || document.body).toBeInTheDocument();
+    // Check if the component renders without errors
+    expect(container).toBeInTheDocument();
+    expect(container.innerHTML.length > 0).toBe(true);
   });
 
   it('handles component lifecycle', () => {

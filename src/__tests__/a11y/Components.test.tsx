@@ -1,7 +1,8 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render } from '@testing-library/react';
 import { I18nextProvider } from 'react-i18next';
-import i18n from '@/i18n';
+import i18n from '@/test/setup';
+import { DemoProvider } from '@/contexts/DemoContext';
 import TaskCard from '@/components/TaskCard';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -21,7 +22,9 @@ const mockTask = {
 // Simple wrapper
 const TestWrapper = ({ children }: { children: React.ReactNode }) => (
   <I18nextProvider i18n={i18n}>
-    {children}
+    <DemoProvider>
+      {children}
+    </DemoProvider>
   </I18nextProvider>
 );
 
