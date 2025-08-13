@@ -1,29 +1,32 @@
 import { useState, useEffect } from "react";
 import { Link, useSearchParams, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Alert, AlertDescription } from "@/components/ui/alert";
 import { ArrowLeft, Lock, CheckCircle } from "lucide-react";
 import SEO from "@/components/SEO";
 import { authAPI } from "@/lib/api";
+import { useErrorHandler } from "@/hooks/useErrorHandler";
 
 const ResetPassword = () => {
+  const { t } = useTranslation();
+  const { handleError } = useErrorHandler();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
-  const [error, setError] = useState("");
   const [token, setToken] = useState("");
   const [isVerifyingToken, setIsVerifyingToken] = useState(true);
+  const [tokenError, setTokenError] = useState(false);
 
   useEffect(() => {
     const tokenParam = searchParams.get("token");
     if (!tokenParam) {
-      setError("Invalid or missing reset token. Please request a new password reset.");
+      setTokenError(true);
       setIsVerifyingToken(false);
       return;
     }
@@ -34,34 +37,28 @@ const ResetPassword = () => {
         await authAPI.verifyResetToken({ token: tokenParam });
         setToken(tokenParam);
       } catch (err: any) {
-        if (err?.status === 400) {
-          setError("Invalid or expired reset token. Please request a new password reset.");
-        } else if (err?.status === 404) {
-          setError("Reset token not found. Please request a new password reset.");
-        } else {
-          setError("Unable to verify reset token. Please try again.");
-        }
+        handleError(err, 'verifyResetToken');
+        setTokenError(true);
       } finally {
         setIsVerifyingToken(false);
       }
     };
     
     verifyToken();
-  }, [searchParams]);
+  }, [searchParams, t, handleError]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    setError("");
 
     if (password !== confirmPassword) {
-      setError("Passwords do not match.");
+      handleError(new Error(t('register.passwordMismatch')), 'resetPassword');
       setIsLoading(false);
       return;
     }
 
     if (password.length < 6) {
-      setError("Password must be at least 6 characters long.");
+      handleError(new Error(t('validation.invalidPassword')), 'resetPassword');
       setIsLoading(false);
       return;
     }
@@ -75,15 +72,7 @@ const ResetPassword = () => {
         navigate("/login");
       }, 3000);
     } catch (err: any) {
-      if (err?.status === 400) {
-        setError("Invalid or expired reset token. Please request a new password reset.");
-      } else if (err?.status === 422) {
-        setError("Password does not meet requirements. Please try a stronger password.");
-      } else if (err?.status === 429) {
-        setError("Too many attempts. Please try again later.");
-      } else {
-        setError("Failed to reset password. Please try again.");
-      }
+      handleError(err, 'resetPassword');
     } finally {
       setIsLoading(false);
     }
@@ -101,7 +90,7 @@ const ResetPassword = () => {
           <CardContent className="pt-6">
             <div className="text-center space-y-4">
               <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto"></div>
-              <p className="text-muted-foreground">Verifying reset token...</p>
+              <p className="text-muted-foreground">{t('resetPassword.verifyingToken')}</p>
             </div>
           </CardContent>
         </Card>
@@ -121,17 +110,53 @@ const ResetPassword = () => {
             <div className="w-16 h-16 bg-success/10 rounded-full flex items-center justify-center mx-auto mb-4">
               <CheckCircle className="h-8 w-8 text-success" />
             </div>
-            <CardTitle className="text-xl">Password Reset Successful</CardTitle>
+            <CardTitle className="text-xl">{t('resetPassword.success')}</CardTitle>
             <CardDescription>
-              Your password has been successfully updated. You will be redirected to login shortly.
+              {t('resetPassword.successMessage')}
             </CardDescription>
           </CardHeader>
           <CardContent>
             <Link to="/login">
               <Button className="w-full">
-                Continue to Login
+                {t('resetPassword.continueToLogin')}
               </Button>
             </Link>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  // Show error if token is invalid
+  if (tokenError) {
+    return (
+      <div className="min-h-screen bg-gradient-soft flex items-center justify-center p-4">
+        <SEO 
+          title="Invalid Reset Token - TaskFlow"
+          description="The password reset token is invalid or has expired."
+        />
+        <Card className="w-full max-w-md">
+          <CardHeader className="text-center">
+            <CardTitle className="text-xl text-destructive">{t('resetPassword.invalidToken')}</CardTitle>
+            <CardDescription>
+              {t('resetPassword.invalidTokenMessage')}
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Link to="/forgot-password">
+              <Button className="w-full">
+                {t('resetPassword.requestNewLink')}
+              </Button>
+            </Link>
+            <div className="mt-4 text-center">
+              <Link 
+                to="/login" 
+                className="text-sm text-muted-foreground hover:text-primary transition-colors inline-flex items-center"
+              >
+                <ArrowLeft className="h-4 w-4 mr-1" />
+                {t('forgotPassword.backToLogin')}
+              </Link>
+            </div>
           </CardContent>
         </Card>
       </div>
@@ -146,27 +171,22 @@ const ResetPassword = () => {
       />
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
-          <CardTitle className="text-2xl font-bold">Reset Password</CardTitle>
+          <CardTitle className="text-2xl font-bold">{t('resetPassword.title')}</CardTitle>
           <CardDescription>
-            Enter your new password below.
+            {t('resetPassword.description')}
           </CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
-            {error && (
-              <Alert variant="destructive">
-                <AlertDescription>{error}</AlertDescription>
-              </Alert>
-            )}
             
             <div className="space-y-2">
-              <Label htmlFor="password">New Password</Label>
+              <Label htmlFor="password">{t('resetPassword.newPassword')}</Label>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
                   id="password"
                   type="password"
-                  placeholder="Enter new password"
+                  placeholder={t('register.passwordPlaceholder')}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className="pl-10"
@@ -177,13 +197,13 @@ const ResetPassword = () => {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="confirmPassword">Confirm Password</Label>
+              <Label htmlFor="confirmPassword">{t('resetPassword.confirmPassword')}</Label>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
                   id="confirmPassword"
                   type="password"
-                  placeholder="Confirm new password"
+                  placeholder={t('register.confirmPasswordPlaceholder')}
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   className="pl-10"
@@ -198,7 +218,7 @@ const ResetPassword = () => {
               className="w-full" 
               disabled={isLoading || !password || !confirmPassword || !token}
             >
-              {isLoading ? "Resetting..." : "Reset Password"}
+              {isLoading ? t('resetPassword.resetting') : t('resetPassword.resetPassword')}
             </Button>
           </form>
 
@@ -208,7 +228,7 @@ const ResetPassword = () => {
               className="text-sm text-muted-foreground hover:text-primary transition-colors inline-flex items-center"
             >
               <ArrowLeft className="h-4 w-4 mr-1" />
-              Back to Login
+              {t('forgotPassword.backToLogin')}
             </Link>
           </div>
         </CardContent>

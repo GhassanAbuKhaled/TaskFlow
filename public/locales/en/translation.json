@@ -128,6 +128,7 @@
   "language": {
     "en": "English",
     "de": "German",
+    "ar": "Arabic",
     "switchLanguage": "Switch Language"
   },
   "login": {
@@ -144,6 +145,33 @@
     "noAccount": "Don't have an account?",
     "signUp": "Sign up",
     "forgotPassword": "Forgot Password?"
+  },
+  "forgotPassword": {
+    "title": "Forgot Password",
+    "description": "Enter your email and we'll send you a password reset link",
+    "emailPlaceholder": "Enter your email",
+    "sendResetLink": "Send Reset Link",
+    "sending": "Sending...",
+    "backToLogin": "Back to Login",
+    "success": "Link Sent",
+    "successMessage": "Password reset link has been sent to your email",
+    "didntReceiveEmail": "Didn't receive the email? Check your spam folder or try again.",
+    "tryDifferentEmail": "Try Different Email"
+  },
+  "resetPassword": {
+    "title": "Reset Password",
+    "description": "Enter your new password",
+    "newPassword": "New Password",
+    "confirmPassword": "Confirm Password",
+    "resetPassword": "Reset Password",
+    "resetting": "Resetting...",
+    "success": "Password Changed",
+    "successMessage": "Your password has been changed successfully. You can now sign in",
+    "invalidToken": "Invalid or expired reset token",
+    "invalidTokenMessage": "The reset link is invalid or has expired. Please request a new password reset.",
+    "requestNewLink": "Request New Reset Link",
+    "verifyingToken": "Verifying reset token...",
+    "continueToLogin": "Continue to Login"
   },
   "register": {
     "backToHome": "Back to Home",

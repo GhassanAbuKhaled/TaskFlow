@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo, ElementType } from "react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
-import { LayoutDashboard, CheckSquare, Plus, X, User, LogOut } from "lucide-react";
+import { LayoutDashboard, CheckSquare, Plus, X, User, LogOut, ChevronLeft, ChevronRight } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useDemoContext } from "@/contexts/DemoContext";
@@ -26,10 +26,11 @@ interface SidebarProps {
 const Sidebar = ({ isOpen, onToggle, userName }: SidebarProps) => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { user, logout } = useAuth();
   const { isDemoMode } = useDemoContext();
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const isRTL = i18n.language === 'ar';
   
   const displayName = userName || (user ? user.username : "User");
   
@@ -95,16 +96,20 @@ const Sidebar = ({ isOpen, onToggle, userName }: SidebarProps) => {
         <Button
           variant={active ? "default" : "ghost"}
           className={cn(
-            "w-full rounded-2xl transition-smooth",
-            isCollapsed ? "p-5 flex justify-center" : "px-4 justify-start text-left",
+            "w-full rounded-2xl transition-smooth h-12",
+            isCollapsed ? "p-5 flex justify-center" : "px-4 justify-start",
+            isRTL && "text-right",
             active 
               ? "bg-sidebar-primary text-sidebar-primary-foreground shadow-medium hover:shadow-large" 
               : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
           )}
         >
-          <Icon className={cn("h-4 w-4 md:h-5 md:w-5", !isCollapsed && "mr-3")} />
+          <Icon className={cn(
+            "h-5 w-5 flex-shrink-0", 
+            !isCollapsed && "mr-3"
+          )} />
           {!isCollapsed && (
-            <span className="font-medium text-sm md:text-base">{item.name}</span>
+            <span className="font-medium text-sm md:text-base flex-1 text-ellipsis-safe">{item.name}</span>
           )}
         </Button>
       </Link>
@@ -118,7 +123,10 @@ const Sidebar = ({ isOpen, onToggle, userName }: SidebarProps) => {
     return (
       <Link key={item.name} to={item.href} onClick={item.onClick || handleLinkClick}>
         {item.isProfile && !isCollapsed ? (
-          <div className="flex items-center space-x-3 mb-3 px-2">
+          <div className={cn(
+            "flex items-center mb-3 px-2",
+            isRTL ? "space-x-reverse space-x-3" : "space-x-3"
+          )}>
             <div className="w-10 h-10 bg-sidebar-primary/20 rounded-full flex items-center justify-center flex-shrink-0">
               <Icon className="h-5 w-5 text-sidebar-primary" />
             </div>
@@ -132,16 +140,20 @@ const Sidebar = ({ isOpen, onToggle, userName }: SidebarProps) => {
             size="sm"
             onClick={item.onClick}
             className={cn(
-              "rounded-xl transition-smooth",
+              "rounded-xl transition-smooth h-10",
               isCollapsed ? "p-2 flex justify-center w-full" : "w-full justify-start px-4",
+              isRTL && "text-right",
               item.isDanger 
                 ? "text-sidebar-foreground hover:text-destructive hover:bg-destructive/10" 
                 : "text-sidebar-foreground hover:bg-sidebar-accent"
             )}
           >
-            <Icon className={cn("h-4 w-4 md:h-5 md:w-5", !isCollapsed && "mr-3")} />
+            <Icon className={cn(
+              "h-4 w-4 md:h-5 md:w-5 flex-shrink-0", 
+              !isCollapsed && "mr-3"
+            )} />
             {!isCollapsed && !item.isProfile && (
-              <span className="font-medium text-sm">{item.name}</span>
+              <span className="font-medium text-sm flex-1 text-ellipsis-safe">{item.name}</span>
             )}
           </Button>
         )}
@@ -163,22 +175,34 @@ const Sidebar = ({ isOpen, onToggle, userName }: SidebarProps) => {
       {/* Sidebar */}
       <div 
         className={cn(
-          "fixed lg:sticky top-0 left-0 z-50 h-screen lg:h-full bg-sidebar transition-all duration-300 ease-in-out",
-          // Mobile: slide in/out from left
-          isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0",
+          "fixed lg:sticky top-0 z-50 h-screen lg:h-full bg-sidebar transition-all duration-300 ease-in-out",
+          // Position based on RTL
+          isRTL ? "right-0" : "left-0",
+          // Mobile: slide in/out from appropriate side
+          isOpen 
+            ? "translate-x-0" 
+            : isRTL 
+              ? "translate-x-full lg:translate-x-0" 
+              : "-translate-x-full lg:translate-x-0",
           // Desktop: collapse/expand
           isCollapsed ? "lg:w-16" : "w-64 lg:w-64"
         )}
       >
         <div className="flex flex-col h-full">
           {/* Header */}
-          <div className="flex items-center justify-between p-3 md:p-4 border-b border-sidebar-border">
+          <div className={cn(
+            "flex items-center justify-between p-3 md:p-4 border-b border-sidebar-border",
+            isRTL && "flex-row-reverse"
+          )}>
             {!isCollapsed && (
               <h1 className="text-base md:text-lg font-semibold text-sidebar-foreground">
                 {t('navbar.menu')}
               </h1>
             )}
-            <div className="flex items-center space-x-2">
+            <div className={cn(
+              "flex items-center",
+              isRTL ? "space-x-reverse space-x-2" : "space-x-2"
+            )}>
               {/* Desktop collapse toggle */}
               <Button
                 variant="ghost"
@@ -186,15 +210,11 @@ const Sidebar = ({ isOpen, onToggle, userName }: SidebarProps) => {
                 onClick={() => setIsCollapsed(!isCollapsed)}
                 className="hidden lg:flex rounded-xl text-sidebar-foreground hover:bg-sidebar-accent transition-smooth"
               >
-                <svg 
-                  width="16" 
-                  height="16" 
-                  viewBox="0 0 16 16" 
-                  fill="currentColor"
-                  className={cn("transition-transform duration-300", isCollapsed ? "rotate-180" : "rotate-0")}
-                >
-                  <path d="M2 8l4-4v3h8v2H6v3l-4-4z"/>
-                </svg>
+                {isRTL ? (
+                  isCollapsed ? <ChevronLeft className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />
+                ) : (
+                  isCollapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />
+                )}
               </Button>
               
               {/* Mobile close button */}

@@ -28,6 +28,8 @@ export default {
 		extend: {
 			fontFamily: {
 				inter: ['Inter', 'sans-serif'],
+				arabic: ['Cairo', 'Inter', 'sans-serif'],
+				sans: ['Inter', 'Cairo', 'sans-serif'],
 			},
 			colors: {
 				border: 'hsl(var(--border))',
@@ -116,5 +118,20 @@ export default {
 			}
 		}
 	},
-	plugins: [require("tailwindcss-animate")],
+	plugins: [
+		require("tailwindcss-animate"),
+		function({ addUtilities }) {
+			addUtilities({
+				'.overflow-wrap-anywhere': {
+					'overflow-wrap': 'anywhere',
+				},
+				'.text-ellipsis-safe': {
+					'text-overflow': 'ellipsis',
+					'white-space': 'nowrap',
+					'overflow': 'hidden',
+					'min-width': '0',
+				},
+			});
+		},
+	],
 } satisfies Config;

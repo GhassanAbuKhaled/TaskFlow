@@ -13,6 +13,7 @@ import SEO from "@/components/SEO";
 import { useTaskContext } from "@/contexts/TaskContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { useDemoContext } from "@/contexts/DemoContext";
+import { useRTL } from "@/hooks/useRTL";
 import { 
   CheckCircle2, 
   Clock, 
@@ -23,6 +24,7 @@ import {
   AlertCircle
 } from "lucide-react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
+import { cn } from "@/lib/utils";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -32,6 +34,7 @@ const Dashboard = () => {
   const { tasks, deleteTask, toggleTaskStatus, isLoading, error, fetchTasks } = useTaskContext();
   const { user } = useAuth();
   const { isDemoMode } = useDemoContext();
+  const isRTL = useRTL();
   
 
 
@@ -210,20 +213,16 @@ const Dashboard = () => {
                     <div className="flex flex-wrap gap-4">
                       <Link to="/create-task">
                         <Button className="rounded-2xl shadow-medium hover:shadow-large transition-all duration-300 w-auto min-w-[140px] px-4 h-10 font-medium">
-                          <Plus className="h-4 w-4 mr-2 flex-shrink-0" />
-                          <span className="whitespace-nowrap">{t('dashboard.newTask')}</span>
+                          <Plus className={cn("h-4 w-4 flex-shrink-0", isRTL ? "ml-2" : "mr-2")} />
+                          <span className="whitespace-nowrap overflow-wrap-anywhere">{t('dashboard.newTask')}</span>
                         </Button>
                       </Link>
                       <Link to="/tasks">
                         <Button variant="outline" className="rounded-2xl w-auto min-w-[160px] px-4 h-10 font-medium">
-                          <CheckCircle2 className="h-4 w-4 mr-2 flex-shrink-0" />
-                          <span className="whitespace-nowrap">{t('dashboard.viewAllTasks')}</span>
+                          <CheckCircle2 className={cn("h-4 w-4 flex-shrink-0", isRTL ? "ml-2" : "mr-2")} />
+                          <span className="whitespace-nowrap overflow-wrap-anywhere">{t('dashboard.viewAllTasks')}</span>
                         </Button>
                       </Link>
-                      {/* <Button variant="outline" className="rounded-2xl w-auto min-w-[160px] px-4 h-10 font-medium">
-                        <Calendar className="h-4 w-4 mr-2 flex-shrink-0" />
-                        <span className="whitespace-nowrap">{t('dashboard.calendarView')}</span>
-                      </Button> */}
                     </div>
                   </CardContent>
                 </Card>

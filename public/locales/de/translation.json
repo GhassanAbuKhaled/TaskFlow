@@ -128,6 +128,7 @@
   "language": {
     "en": "Englisch",
     "de": "Deutsch",
+    "ar": "Arabisch",
     "switchLanguage": "Sprache wechseln"
   },
   "login": {
@@ -144,6 +145,33 @@
     "noAccount": "Noch kein Konto?",
     "signUp": "Registrieren",
     "forgotPassword": "Passwort vergessen?"
+  },
+  "forgotPassword": {
+    "title": "Passwort vergessen",
+    "description": "Geben Sie Ihre E-Mail ein und wir senden Ihnen einen Link zum Zurücksetzen des Passworts",
+    "emailPlaceholder": "E-Mail-Adresse eingeben",
+    "sendResetLink": "Reset-Link senden",
+    "sending": "Wird gesendet...",
+    "backToLogin": "Zurück zur Anmeldung",
+    "success": "Link gesendet",
+    "successMessage": "Der Link zum Zurücksetzen des Passworts wurde an Ihre E-Mail gesendet",
+    "didntReceiveEmail": "E-Mail nicht erhalten? Überprüfen Sie Ihren Spam-Ordner oder versuchen Sie es erneut.",
+    "tryDifferentEmail": "Andere E-Mail versuchen"
+  },
+  "resetPassword": {
+    "title": "Passwort zurücksetzen",
+    "description": "Geben Sie Ihr neues Passwort ein",
+    "newPassword": "Neues Passwort",
+    "confirmPassword": "Passwort bestätigen",
+    "resetPassword": "Passwort zurücksetzen",
+    "resetting": "Wird zurückgesetzt...",
+    "success": "Passwort geändert",
+    "successMessage": "Ihr Passwort wurde erfolgreich geändert. Sie können sich jetzt anmelden",
+    "invalidToken": "Ungültiger oder abgelaufener Reset-Token",
+    "invalidTokenMessage": "Der Reset-Link ist ungültig oder abgelaufen. Bitte fordern Sie einen neuen Passwort-Reset an.",
+    "requestNewLink": "Neuen Reset-Link anfordern",
+    "verifyingToken": "Reset-Token wird überprüft...",
+    "continueToLogin": "Weiter zur Anmeldung"
   },
   "register": {
     "backToHome": "Zurück zur Startseite",

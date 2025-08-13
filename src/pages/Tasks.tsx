@@ -107,7 +107,7 @@ const StatusOverview = ({ tasks }: StatusOverviewProps) => {
   return (
     <div className="flex flex-wrap gap-2 sm:gap-4">
       <Badge variant="outline" className="px-3 py-2 rounded-full">
-        Total: {tasks.length}
+        {t('dashboard.stats.total')}: {tasks.length}
       </Badge>
       <Badge variant="outline" className="px-3 py-2 rounded-full text-muted-foreground">
         {t('status.todo')}: {getStatusCount("TODO")}

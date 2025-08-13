@@ -219,6 +219,88 @@
     @apply transition-smooth hover:scale-105;
   }
 
+  /* RTL Support */
+  [dir="rtl"] {
+    text-align: right;
+    font-family: 'Cairo', 'Inter', sans-serif !important;
+  }
+
+  [dir="rtl"] * {
+    font-family: 'Cairo', 'Inter', sans-serif !important;
+  }
+
+  [dir="rtl"] .text-left {
+    text-align: right;
+  }
+
+  [dir="rtl"] .text-right {
+    text-align: left;
+  }
+
+  /* RTL-friendly spacing utilities */
+  [dir="rtl"] .space-x-reverse > :not([hidden]) ~ :not([hidden]) {
+    --tw-space-x-reverse: 1;
+  }
+
+  /* RTL dropdown positioning */
+  [dir="rtl"] [data-radix-popper-content-wrapper] {
+    transform-origin: right center;
+  }
+
+  /* RTL toast positioning */
+  [dir="rtl"] [data-sonner-toaster] {
+    left: auto !important;
+    right: 0 !important;
+  }
+
+  [dir="rtl"] [data-sonner-toast] {
+    text-align: right;
+    direction: rtl;
+  }
+
+  /* Toast close button positioning for RTL */
+  [dir="rtl"] [data-sonner-toast] button[data-close-button="true"],
+  [dir="rtl"] [data-sonner-toast] button[aria-label*="close"],
+  [dir="rtl"] [data-sonner-toast] button[aria-label*="Close"],
+  [dir="rtl"] [data-sonner-toast] button svg {
+    position: absolute !important;
+    left: 12px !important;
+    right: auto !important;
+    top: 12px !important;
+  }
+
+  /* RTL form inputs */
+  [dir="rtl"] input,
+  [dir="rtl"] textarea {
+    text-align: right;
+  }
+
+  [dir="rtl"] input::placeholder,
+  [dir="rtl"] textarea::placeholder {
+    text-align: right;
+  }
+
+  /* RTL button content alignment */
+  [dir="rtl"] .justify-start {
+    justify-content: flex-end;
+  }
+
+  [dir="rtl"] .justify-end {
+    justify-content: flex-start;
+  }
+
+  /* Prevent layout shifts with long Arabic text */
+  .overflow-wrap-anywhere {
+    overflow-wrap: anywhere;
+  }
+
+  .text-ellipsis-safe {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    min-width: 0;
+  }
+
   /* Reduced motion support */
   @media (prefers-reduced-motion: reduce) {
     *,

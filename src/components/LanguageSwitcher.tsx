@@ -8,18 +8,24 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useErrorHandler } from "@/hooks/useErrorHandler";
 
 const LanguageSwitcher = () => {
   const { i18n, t } = useTranslation();
+  const { handleError } = useErrorHandler();
   const [currentLanguage, setCurrentLanguage] = useState(i18n.language || "de");
 
   useEffect(() => {
     setCurrentLanguage(i18n.language);
   }, [i18n.language]);
 
-  const changeLanguage = (lng: string) => {
-    i18n.changeLanguage(lng);
-    setCurrentLanguage(lng);
+  const changeLanguage = async (lng: string) => {
+    try {
+      await i18n.changeLanguage(lng);
+      setCurrentLanguage(lng);
+    } catch (error) {
+      handleError(error as Error, 'changeLanguage');
+    }
   };
 
   return (
@@ -46,6 +52,12 @@ const LanguageSwitcher = () => {
           className={currentLanguage === "de" ? "bg-muted" : ""}
         >
           {t("language.de")}
+        </DropdownMenuItem>
+        <DropdownMenuItem
+          onClick={() => changeLanguage("ar")}
+          className={currentLanguage === "ar" ? "bg-muted" : ""}
+        >
+          {t("language.ar")}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

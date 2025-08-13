@@ -16,6 +16,7 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useConfirmation } from "@/hooks/useConfirmation";
 import { useDemoContext } from "@/contexts/DemoContext";
+import { useRTL } from "@/hooks/useRTL";
 
 export interface Task {
   id: string;
@@ -40,6 +41,7 @@ const TaskCard = ({ task, onEdit, onDelete, onToggleStatus }: TaskCardProps) => 
   const { t } = useTranslation();
   const { isDemoMode } = useDemoContext();
   const confirmation = useConfirmation();
+  const isRTL = useRTL();
 
   const handleDelete = async () => {
     if (isDemoMode) {
@@ -91,7 +93,10 @@ const TaskCard = ({ task, onEdit, onDelete, onToggleStatus }: TaskCardProps) => 
         <CardContent className="p-3 sm:p-6">
           {/* Header */}
           <div className="flex items-start justify-between mb-3 sm:mb-4">
-            <div className="flex items-center space-x-3">
+            <div className={cn(
+              "flex items-center",
+              isRTL ? "space-x-reverse space-x-3" : "space-x-3"
+            )}>
               <div className="hover:scale-110 transition-transform duration-150">
                 <Button
                   variant="ghost"
@@ -104,7 +109,7 @@ const TaskCard = ({ task, onEdit, onDelete, onToggleStatus }: TaskCardProps) => 
               </div>
               <div>
                 <h3 className={cn(
-                  "font-semibold text-foreground text-sm sm:text-base line-clamp-1 max-w-[150px] sm:max-w-[180px] md:max-w-full",
+                  "font-semibold text-foreground text-sm sm:text-base line-clamp-1 max-w-[150px] sm:max-w-[180px] md:max-w-full overflow-wrap-anywhere",
                   task.status === "COMPLETED" && "line-through text-muted-foreground"
                 )}>
                   {task.title}
@@ -119,7 +124,11 @@ const TaskCard = ({ task, onEdit, onDelete, onToggleStatus }: TaskCardProps) => 
             </div>
             
             <div 
-              className={`flex items-center space-x-1 transition-opacity duration-200 ${showControls ? 'opacity-100' : 'opacity-0'}`}
+              className={cn(
+                "flex items-center transition-opacity duration-200",
+                isRTL ? "space-x-reverse space-x-1" : "space-x-1",
+                showControls ? 'opacity-100' : 'opacity-0'
+              )}
             >
               <Button
                 variant="ghost"
@@ -141,7 +150,7 @@ const TaskCard = ({ task, onEdit, onDelete, onToggleStatus }: TaskCardProps) => 
           </div>
 
         {/* Description */}
-        <p className="text-muted-foreground text-xs sm:text-sm mb-3 sm:mb-4 line-clamp-2">
+        <p className="text-muted-foreground text-xs sm:text-sm mb-3 sm:mb-4 line-clamp-2 overflow-wrap-anywhere">
           {task.description}
         </p>
 
@@ -164,7 +173,8 @@ const TaskCard = ({ task, onEdit, onDelete, onToggleStatus }: TaskCardProps) => 
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between text-xs text-muted-foreground gap-2 sm:gap-0">
           <div className="flex items-center">
             <div className={cn(
-              "flex items-center space-x-1",
+              "flex items-center",
+              isRTL ? "space-x-reverse space-x-1" : "space-x-1",
               isOverdue && "text-destructive"
             )}>
               {isOverdue && (
