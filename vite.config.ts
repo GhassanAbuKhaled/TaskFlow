@@ -5,7 +5,7 @@ import path from "path";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
-  base: process.env.VITE_BASE_PATH || "/",
+  base: mode === 'production' ? '/TaskFlow/' : '/',
   server: {
     host: "::",
     port: 3000,
