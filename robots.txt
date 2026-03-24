@@ -1,0 +1,12 @@
+User-agent: *
+Allow: /
+Allow: /login
+Allow: /register
+Allow: /demo
+
+Disallow: /dashboard
+Disallow: /tasks
+Disallow: /create-task
+Disallow: /edit-task
+
+Sitemap: https://taskflow.ghassanabukhaled.com/sitemap.xml
